@@ -1,5 +1,4 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
+import Video from "./Video";
 
 const CHANNEL_ID = "UC2D2CMWXMOVWx7giW1n3LIg";
 const url = "https://youtube.googleapis.com/youtube/v3/";
@@ -9,33 +8,45 @@ async function getUploadsPlayistId() {
   const res = await fetch(
     `${url}channels?part=contentDetails&id=${CHANNEL_ID}&key=${apiKey}`
   );
+
   return res.json();
 }
 
-async function getPlaylistItems() {
+async function getPlaylistItems(playlistId: string) {
   const res = await fetch(
-    `${url}playlistItems?part=contentDetails&playlistId=UU2D2CMWXMOVWx7giW1n3LIg&key={{api_key}}`
+    `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}`
   );
+
+  return res.json();
 }
-
-async function getVideoDetails() {}
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default async function Home() {
   // Initiate both requests in parallel
   // const artistData = getArtist(username);
   // const albumsData = getArtistAlbums(username);
-  const uploadsPlaylistId = await getUploadsPlayistId();
-  // const { uploadsPlaylistId2 } = uploadsPlaylistId.items.id;
-  // const { id } = uploadsPlaylistId.items[0].id;
-  console.log(uploadsPlaylistId.items[0].id);
+
+  const uploadsPlaylistObj = await getUploadsPlayistId();
+  const uploadsPlaylistId =
+    uploadsPlaylistObj.items[0].contentDetails.relatedPlaylists.uploads;
+  const playlistItems = await getPlaylistItems(uploadsPlaylistId);
+
+  // console.log(uploadsPlaylistObj, uploadsPlaylistId);
+  // console.log(playlistItems);
+
   // Wait for the promises to resolve
   // const [artist, albums] = await Promise.all([artistData, albumsData]);
 
   return (
     <main>
-      <div className="text-red-300">hi</div>
+      <div className="text-zinc-200">
+        {playlistItems.items.map((item) => (
+          <>
+            <p>{item.contentDetails.videoId}</p>
+            {/* @ts-expect-error Async Server Component */}
+            <Video videoId={item.contentDetails.videoId} />
+          </>
+        ))}
+      </div>
     </main>
   );
 }
