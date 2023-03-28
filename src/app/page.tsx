@@ -14,7 +14,7 @@ async function getUploadsPlayistId() {
 
 async function getPlaylistItems(playlistId: string) {
   const res = await fetch(
-    `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}`
+    `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50`
   );
 
   return res.json();
