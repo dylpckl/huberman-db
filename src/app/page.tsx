@@ -42,12 +42,14 @@ export default async function Home() {
     <main className="flex flex-col gap-4">
       <Filter />
       <div className="text-zinc-200 grid grid-cols-4 gap-4">
-        {playlistItems.items.map((item) => (
+        
+        {/* {playlistItems.items.map((item) => (
           <>
-            {/* @ts-expect-error Async Server Component */}
+            @ts-expect-error Async Server Component
             <Video videoId={item.contentDetails.videoId} />
           </>
-        ))}
+        ))} */}
+
       </div>
     </main>
   );

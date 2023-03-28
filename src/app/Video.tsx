@@ -23,6 +23,7 @@ export default async function Video({ videoId }: Props) {
   return (
     <div className="flex flex-col rounded bg-pink-600 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8">
       {videoData.items.map((i) => {
+        console.log(i.id)
         return (
           <div key="">
             <p>{i.snippet.title}</p>

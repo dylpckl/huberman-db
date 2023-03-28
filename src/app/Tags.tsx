@@ -6,7 +6,7 @@ interface Props {
 
 export default function Tags({ tags }: Props) {
   const filteredTags = filterTags(tags);
-  console.log(filteredTags)
+  // console.log(filteredTags)
   return (
     <ul className="flex flex-wrap gap-2">
       {filteredTags.map((t, index) => {
