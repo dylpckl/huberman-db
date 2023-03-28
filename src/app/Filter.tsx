@@ -103,18 +103,24 @@ const videos = {
   },
 };
 
-const tagOptions = [
-  { value: "improve sleep", checked: false },
-  { value: "sleep quality", checked: false },
-  { value: "sleep better", checked: false },
-  { value: "how to slee better", checked: false },
-  { value: "how to improv sleep", checked: false },
-  { value: "optimize sleep", checked: false },
-  { value: "get better slee", checked: false },
-  { value: "circadian clock", checked: false },
-  { value: "circadian rhythm", checked: false },
-  { value: "stay asleep", checked: false },
-  { value: "fall back alsee", checked: false },
+interface TagOption {
+  id: number;
+  value: string;
+  checked: boolean;
+}
+
+const tagOptions: TagOption[] = [
+  { id: 1, value: "improve sleep", checked: false },
+  { id: 2, value: "sleep quality", checked: false },
+  { id: 3, value: "sleep better", checked: false },
+  { id: 4, value: "how to slee better", checked: false },
+  { id: 5, value: "how to improv sleep", checked: false },
+  { id: 6, value: "optimize sleep", checked: false },
+  { id: 7, value: "get better slee", checked: false },
+  { id: 8, value: "circadian clock", checked: false },
+  { id: 9, value: "circadian rhythm", checked: false },
+  { id: 10, value: "stay asleep", checked: false },
+  { id: 11, value: "fall back alsee", checked: false },
 ];
 
 // function filterVideos(videos){
@@ -127,19 +133,32 @@ const tagOptions = [
 export default function Filter() {
   const [tags, setTags] = useState(tagOptions);
 
-  // filter results
-  // const results = filter
-
   // update array of tags with setTags
-  function handleChange(e) {
-    setFirst(e.target.value);
+  function handleTagOptionChange(id: number, checked: boolean) {
+    // initialize a new variable updateTags, which maps over the tags array and checks the id of each tag in the array to the argument provided to the funtion. if the id matches, then spread the tag object and set the checked property to the argument provided (true or false)
+    const updatedTags = tags.map((tag: TagOption) =>
+      tag.id === id ? { ...tag, checked } : tag
+    );
+    setTags(updatedTags);
   }
+
+  //   function handleTagOptionChange(
+  //     id: number,
+  //     checked: boolean,
+  //     tags: TagOption[],
+  //     setTags: React.Dispatch<React.SetStateAction<TagOption[]>>
+  //   ) {
+  //     const updatedTags = tags.map((tag: TagOption) =>
+  //       tag.id === id ? { ...tag, checked } : tag
+  //     );
+  //     setTags(updatedTags);
+  //   }
 
   return (
     <>
       <FilterBar
         tags={tagOptions}
-        onChange={handleChange}
+        onChange={handleTagOptionChange}
       />
       <hr />
       {/* <VideoList videos={results} /> */}
@@ -154,14 +173,16 @@ function FilterBar({ tags, onChange }) {
     <div>
       <h1>filter</h1>
       <ul>
-        {tagOptions.map((tag,index) => (
-          <div>
+        {tags.map((tag: TagOption) => (
+          <div key={tag.id}>
             <input
               type="checkbox"
-              name=""
-              id={`filter-${index}`}
+              name={tag.value}
+              //   checked={tag.checked}
+              id={tag.id.toString()}
+              onChange={(e) => onChange(tag.id, e.target.checked)}
             />
-            <label htmlFor={`filter-${index}`}>{tag.value}</label>
+            <label htmlFor={tag.id.toString()}>{tag.value}</label>
           </div>
         ))}
       </ul>
