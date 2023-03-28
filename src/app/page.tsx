@@ -38,10 +38,9 @@ export default async function Home() {
 
   return (
     <main>
-      <div className="text-zinc-200">
+      <div className="text-zinc-200 grid grid-cols-4 gap-4">
         {playlistItems.items.map((item) => (
           <>
-            <p>{item.contentDetails.videoId}</p>
             {/* @ts-expect-error Async Server Component */}
             <Video videoId={item.contentDetails.videoId} />
           </>
