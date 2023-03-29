@@ -46,15 +46,22 @@ let nextId = 0; // initialize a number to increment for the purpose of creating 
 // This function accepts a list of videos and returns only those that have tags that are
 // active = true in state
 function filterVideos(videos: Video[], tags: Tag[]): Video[] {
+  // 1. use filter() method on the videos array to return a new array videos
+  // 2. use some() on video.items[0].snippet.tags to see if at least one element in the array
+  //      passes the test in the provided function
+  // 3. the provided function being:
+  //      use some() on the tags state array to find tags where
+  //      tag.value === t from video.items[0].snippet.tags
+  //      and where tag.active === true (checked)
   const result = videos.filter((video: Video) =>
     video.items[0].snippet.tags.some((t) =>
       tags.some((tag) => tag.value === t && tag.active === true)
     )
   );
-  console.log(
-    result.map((r) => r.items[0].snippet.tags),
-    tags
-  );
+  // console.log(
+  //   result.map((r) => r.items[0].snippet.tags),
+  //   tags
+  // );
   return result;
 }
 
