@@ -3,20 +3,15 @@ import { useState } from "react";
 import { videos } from "../app/lib/videos";
 import Video from "./Video";
 
-interface TagOption {
+interface Tag {
   id: number;
   value: string;
   checked: boolean;
 }
 
-interface Tag {
-  id: number;
-  value: string;
-}
+// TODO - reword tags object, don't need id
 
-//TODO - re-write tags, add or remove them from array when checked
-
-const tagOptions: TagOption[] = [
+const testTags: Tag[] = [
   { id: 1, value: "improve sleep", checked: false },
   { id: 2, value: "sleep quality", checked: false },
   { id: 3, value: "sleep better", checked: false },
@@ -42,78 +37,44 @@ function filterVideos(items, query) {
   );
 }
 
-
-
 export default function Filter() {
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [tags, setTags] = useState<Tag[]>(testTags);
   // const [filteredVideos, setFilteredVideos] = useState<Video[]>([]);
 
   // This function is our even handler that will be sent down the child functions
   function handleUpdateTags(id: number, value: string, checked: boolean) {
-    
-    // If the input is unchecked, remove the tag
+    // If the input is unchecked, remove the corresponding tag
+    // see: https://react.dev/learn/updating-arrays-in-state#removing-from-an-array
     if (checked === false) {
-      setTags(tags.filter((a) => a.id !== tag.id));
+      setTags(tags.filter((t) => t.id !== id));
     } else {
       // otherwise, update state
       // if the tags array doesn't contain an element with id equal to that passed into handleUpdateTags
       if (tags.some((tag) => tag.id !== id)) {
         //  1. replace the state with a new array, that contains all of the old items
         //  2. and a new item: object with properties id and value,
-        //  3. where id is nextId++ and value is the value passed into handleUpdateTags
+        //  3. where id is nextId++, value is the value passed into handleUpdateTags, checked is true
         //  see: https://react.dev/learn/updating-arrays-in-state#adding-to-an-array
-        setTags([...tags, { id: nextId++, value: value }]);
+        setTags([...tags, { id: nextId++, value: value, checked: true }]);
       }
     }
-
-    // updateFilteredVideos();
   }
-
-  // need function to filter videos
-  const filteredVideos = filterVideos();
-
-  // function updateFilteredVideos() {
-  //   // const checkedTags = tags
-  //   //   .filter((tag) => tag.checked)
-  //   //   .map((tag) => tag.value);
-  //   // console.log(checkedTags);
-  //   // if(video.items[0].snippet.tags.filter(tag) =>tags.some(tag=>tag.value === ))
-  //   // do this all in one line!
-  //   // if (video.items[0].snippet.tags.filter((tag) => tags.some(tag))) {
-  //   //   if (filteredVideos.some((el) => el.items[0].id !== video.items[0].id))
-  //   //     setFilteredVideos([...filteredVideos, video]);
-  //   // }
-  // }
-
-  //   const matchedTags = video.items[0].snippet.tags.filter((tag) =>
-  //     checkedTags.includes(tag)
-  //   );
-
-  //   console.log(matchedTags, matchedTags.length);
-  //   if (matchedTags.length > 0) {
-  //     // replace filteredVideos with a new array that contains all of the old items plus a new one at the end
-  //     if (filteredVideos.some((el) => el.items[0].id !== video.items[0].id))
-  //       setFilteredVideos([...filteredVideos, video]);
-  //   }
-  // });
-  // );
-  // return;
 
   return (
     <>
-      {videos.map((v: Video) => (
+      {/* {videos.map((v: Video) => (
         <div key={v.items[0].id}>
           <p>{v.items[0].snippet.tags}</p>
           <p>{v.items[0].id}</p>
         </div>
-      ))}
+      ))} */}
       <hr />
       <TagFilter
-        tags={tagOptions}
+        tags={tags}
         onChange={handleUpdateTags}
       />
       <hr />
-      <VideoList videos={filteredVideos} />
+      {/* <VideoList videos={filteredVideos} /> */}
     </>
   );
 }
@@ -121,23 +82,24 @@ export default function Filter() {
 // TagFilter component that accepts props from Parent component:
 //   1. state value 'tags'
 //   2. event handler
-
 function TagFilter({ tags, onChange }) {
   return (
     <div>
       <h1>filter</h1>
       <ul>
-        {tags.map((tag: TagOption) => (
+        {tags.map((tag: Tag) => (
           <div key={tag.id}>
             <input
               type="checkbox"
-              name={tag.value}
-              //   checked={tag.checked}
+              // name={`${tag.value},${tag.id}`}
               id={tag.id.toString()}
-              // pass the onChange prop as the onChange fucntion
-              onChange={onChange(tag.id, tag.value, tag.checked)}
+              // pass the event handler called onChange into the onChange method on the input
+              // the syntax to pass an inline function is: onClick={() => alert('...')}
+              onChange={(e) => onChange(tag.id, tag.value, e.target.checked)}
             />
-            <label htmlFor={tag.id.toString()}>{tag.value}</label>
+            <label
+              htmlFor={tag.id.toString()}
+            >{`${tag.value},${tag.id}`}</label>
           </div>
         ))}
       </ul>
@@ -145,7 +107,7 @@ function TagFilter({ tags, onChange }) {
   );
 }
 
-// VideoList component that accepts videos, a filtered array
+// VideoList component that accepts the result of filterVideos()
 function VideoList({ videos }) {
   return (
     <div>
