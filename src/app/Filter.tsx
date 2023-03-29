@@ -8,8 +8,6 @@ interface Tag {
   active: boolean;
 }
 
-// TODO - reword tags object, don't need id
-
 const testTags: Tag[] = [
   { value: "improve sleep", active: false },
   { value: "sleep quality", active: false },
@@ -45,18 +43,29 @@ const testTags: Tag[] = [
 
 let nextId = 0; // initialize a number to increment for the purpose of creating id's
 
-function filterVideos(items, query) {
-  query = query.toLowerCase();
-  return items.filter((item) =>
-    item.name.split(" ").some((word) => word.toLowerCase().startsWith(query))
+// This function accepts a list of videos and returns only those that have tags that are
+// active = true in state
+function filterVideos(videos: Video[], tags: Tag[]): Video[] {
+  const result = videos.filter((video: Video) =>
+    video.items[0].snippet.tags.some((t) =>
+      tags.some((tag) => tag.value === t && tag.active === true)
+    )
   );
+  console.log(
+    result.map((r) => r.items[0].snippet.tags),
+    tags
+  );
+  return result;
 }
 
 export default function Filter() {
   const [tags, setTags] = useState<Tag[]>(testTags);
   // const [filteredVideos, setFilteredVideos] = useState<Video[]>([]);
 
-  // This function is our even handler that will be sent down the child functions
+  const filteredVideos = filterVideos(videos, tags);
+
+  // This function is our event handler that will be sent down the child functions
+  // see https://react.dev/learn/updating-arrays-in-state#updating-objects-inside-arrays
   function handleUpdateTags(value: string, active: boolean) {
     // If the input is unchecked, update active to false
     if (active === false) {
@@ -72,7 +81,7 @@ export default function Filter() {
       );
     } else {
       // otherwise, update state
-      // if the tags array doesn't contain an element with id equal to that passed into handleUpdateTags
+      // if the tags array doesn't contain an element with value equal to that passed into handleUpdateTags
       if (tags.some((tag) => tag.value !== value)) {
         // console.log(
         //   tags,
@@ -89,8 +98,6 @@ export default function Filter() {
             return tag;
           })
         );
-
-        // see https://react.dev/learn/updating-arrays-in-state#updating-objects-inside-arrays
       }
     }
   }
@@ -109,7 +116,7 @@ export default function Filter() {
         onChange={handleUpdateTags}
       />
       <hr />
-      {/* <VideoList videos={filteredVideos} /> */}
+      <VideoList videos={filteredVideos} />
     </>
   );
 }
@@ -128,7 +135,7 @@ function TagFilter({ tags, onChange }) {
               type="checkbox"
               // name={`${tag.value},${tag.id}`}
               id={tag.value}
-              // pass the event handler called onChange into the onChange method on the input
+              // pass the event handler prop into the onChange method on the input
               // the syntax to pass an inline function is: onClick={() => alert('...')}
               onChange={(e) => onChange(tag.value, e.target.checked)}
             />
@@ -145,9 +152,7 @@ function VideoList({ videos }) {
   return (
     <div>
       <h1>videos</h1>
-      {videos.map((video: Video) => (
-        <p>{video.items[0].id}</p>
-      ))}
+      {videos && videos.map((video: Video) => <p>{video.items[0].id}</p>)}
     </div>
   );
 }
