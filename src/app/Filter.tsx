@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { videos } from "../app/lib/videos";
-import Video from "./Video";
+// import { videos } from "../app/lib/videos";
+// import Video from "./Video";
 import VideoClient from "./VideoClient";
 
 interface Tag {
@@ -25,28 +25,13 @@ const testTags: Tag[] = [
   { value: "procrastination", active: false },
   { value: "andrew huberman", active: false },
 ];
-// const testTags: Tag[] = [
-//   { id: 1, value: "improve sleep", checked: false },
-//   { id: 2, value: "sleep quality", checked: false },
-//   { id: 3, value: "sleep better", checked: false },
-//   { id: 4, value: "how to slee better", checked: false },
-//   { id: 5, value: "how to improv sleep", checked: false },
-//   { id: 6, value: "optimize sleep", checked: false },
-//   { id: 7, value: "get better slee", checked: false },
-//   { id: 8, value: "circadian clock", checked: false },
-//   { id: 9, value: "circadian rhythm", checked: false },
-//   { id: 10, value: "stay asleep", checked: false },
-//   { id: 11, value: "fall back alsee", checked: false },
-//   { id: 12, value: "lifespan", checked: false },
-//   { id: 13, value: "procrastination", checked: false },
-//   { id: 14, value: "andrew huberman", checked: false },
-// ];
 
 let nextId = 0; // initialize a number to increment for the purpose of creating id's
 
 // This function accepts a list of videos and returns only those that have tags that are
 // active = true in state
 function filterVideos(videos: Video[], tags: Tag[]): Video[] {
+    console.log(videos,tags)
   // 1. use filter() method on the videos array to return a new array videos
   // 2. use some() on video.items[0].snippet.tags to see if at least one element in the array
   //      passes the test in the provided function
@@ -54,7 +39,7 @@ function filterVideos(videos: Video[], tags: Tag[]): Video[] {
   //      use some() on the tags state array to find tags where
   //      tag.value === t from video.items[0].snippet.tags
   //      and where tag.active === true (checked)
-  const result = videos.filter((video: Video) =>
+  const result = videos.videos.filter((video: Video) =>
     video.items[0].snippet.tags.some((t) =>
       tags.some((tag) => tag.value === t && tag.active === true)
     )
@@ -66,9 +51,9 @@ function filterVideos(videos: Video[], tags: Tag[]): Video[] {
   return result;
 }
 
-export default function Filter() {
+export default function Filter(videos: Video[]) {
   const [tags, setTags] = useState<Tag[]>(testTags);
-  // const [filteredVideos, setFilteredVideos] = useState<Video[]>([]);
+  // console.log(videos);
 
   const filteredVideos = filterVideos(videos, tags);
 
@@ -124,12 +109,6 @@ export default function Filter() {
         onChange={handleUpdateTags}
       />
       <hr />
-      {/* <VideoList videos={filteredVideos}>
-        <>
-          <p>test</p>
-          
-        </>
-      </VideoList> */}
       <VideoList videos={filteredVideos} />
     </>
   );
@@ -164,12 +143,8 @@ function TagFilter({ tags, onChange }) {
 // VideoList component that accepts the result of filterVideos()
 function VideoList({ videos }) {
   return (
-    <div>
-      <h1>videos</h1>
+    <div className="grid grid-cols-4 gap-4">
       {/* {videos && videos.map((video: Video) => <p>{video.items[0].id}</p>)} */}
-
-      {/* <Video videoId="K-TW2Chpz4k" /> */}
-
       {videos &&
         videos.map((video: Video) => (
           <VideoClient videoId={video.items[0].id} />

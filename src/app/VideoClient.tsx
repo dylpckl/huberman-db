@@ -36,11 +36,10 @@ export default function VideoClient({ videoId }: string) {
   if (!data) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-col rounded bg-pink-600 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 lg:gap-x-8">
-      <h1>video</h1>
+    <div className="rounded bg-pink-600">
       <span>{data.items[0].id}</span>
       {data.items.map((i) => (
-        <div key={i.id}>
+        <div key={i.id} className="grid-span-1">
           <p>{i.snippet.title}</p>
           <Image
             src={i.snippet.thumbnails.maxres.url}
