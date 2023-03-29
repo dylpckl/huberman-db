@@ -169,93 +169,93 @@ export const videos = [{
         "resultsPerPage": 1
     }
 },
-    // {
-    //     "kind": "youtube#videoListResponse",
-    //     "etag": "Fvy5TK796boBrqw9eV7EZxq_Xjw",
-    //     "items": [
-    //         {
-    //             "kind": "youtube#video",
-    //             "etag": "mtNwom87evCm2XGLywA7f0uVsR4",
-    //             "id": "ufsIA5NARIo",
-    //             "snippet": {
-    //                 "publishedAt": "2023-03-20T12:00:47Z",
-    //                 "channelId": "UC2D2CMWXMOVWx7giW1n3LIg",
-    //                 "title": "Dr. Peter Attia: Improve Vitality, Emotional & Physical Health & Lifespan | Huberman Lab Podcast",
-    //                 "description": "In this episode, my guest is Peter Attia, M.D. He completed his medical and advanced training at Stanford University School of Medicine, Johns Hopkins School of Medicine and the National Institutes of Health (NIH). Dr. Attia is host of the health and medicine podcast, The Drive, and the author of a new book, “Outlive: The Science & Art of Longevity,” which examines disease prevention and healthy aging, including emotional health. He explains the leading causes of death worldwide and how to measure one’s risk of death and mitigate each risk factor. Dr. Attia shares how, in addition to blood-based markers of lipids and hormones, there are behavioral measures and interventions, and key aspects of emotional health (i.e., relationships, emotional stability, purpose, etc.) that fundamentally impact our physical health and longevity, and how to assess and adjust our emotional health. This episode is rich with actionable information related to disease screening and biomarker testing, nutritional, exercise, behavior and prescription-based tools that area useful to all people regardless of age, male or female, and that can significantly improve vitality, health and lifespan.\n\n#HubermanLab #Science #Science \n\nThank you to our sponsors\nAG1 (Athletic Greens): https://athleticgreens.com/huberman\nEight Sleep: https://eightsleep.com/huberman\nLMNT: https://drinklmnt.com/huberman  \nHVMN: https://hvmn.com/huberman\nInsideTracker: https://www.insidetracker.com/huberman\n\nSupplements from Momentous\nhttps://www.livemomentous.com/huberman\n\nHuberman Lab Social & Website\nInstagram: https://www.instagram.com/hubermanlab \nTwitter: https://twitter.com/hubermanlab \nFacebook: https://www.facebook.com/hubermanlab \nLinkedIn: https://www.linkedin.com/in/andrew-huberman\nWebsite: https://hubermanlab.com \nNewsletter: https://hubermanlab.com/neural-network\n\nDr. Peter Attia\nWebsite: https://peterattiamd.com \nThe Peter Attia Drive Podcast: https://peterattiamd.com/podcast\nNewsletter: https://peterattiamd.com/newsletter\nTwitter: https://twitter.com/PeterAttiaMD \nInstagram: https://www.instagram.com/peterattiamd\nYouTube: https://www.youtube.com/c/PeterAttiaMD \nFacebook: https://www.facebook.com/peterattiamd \n\nArticles\nA Wandering Mind Is an Unhappy Mind: https://bit.ly/40ccfw8\n\nBooks\nOutlive: The Science & Art of Longevity book: https://peterattiamd.com/outlive\nThe Road to Character: https://amzn.to/42nMx9H\n\nOther Resources\nWithings Blood Pressure Cuff: https://amzn.to/42pG3a7\nOmron Blood Pressure Cuff: https://amzn.to/3LEnbyj\nPrenuvo Whole-Body MRI: https://www.prenuvo.com \nBiograph: https://www.biograph.com \nThe Fentanyl Crisis and Why Everyone Should Be Paying Attention (The Drive podcast episode): https://peterattiamd.com/anthonyhipolito\n\nTimestamps\n00:00:00 Dr. Peter Attia\n00:03:22 Sponsors: Eight Sleep, LMNT, HVMN, Momentous\n00:07:34 Lifespan vs. Healthspan\n00:10:54 “4 Horseman of Death”, Diseases of Atherosclerosis\n00:14:44 Tool: Hypertension & Stroke, Blood Pressure Testing \n00:23:14 Preventing Atherosclerosis, Smoking & Vaping, Pollution\n00:32:24 Sponsor: AG-1 (Athletic Greens)\n00:33:29 Cholesterol, ApoB\n00:42:21 Cholesterol Levels, LDL & ApoB Testing\n00:49:29 ApoB Levels & Atherosclerosis, Causality\n01:01:06 ApoB Reduction, Insulin Resistance, Statins, Ezetimibe, PCSK9 Inhibitors\n01:12:30 Monitoring ApoB\n01:17:12 Sponsor: InsideTracker\n01:18:30 Reducing Blood Pressure, Exercise & Sleep\n01:20:50 High Blood Pressure & Kidneys\n01:23:11 Alcohol, Sleep & Disease Risk\n01:31:21 Cancer & Cancer Risks: Genetics, Smoking & Obesity\n01:39:47 Cancer Screening & Survival\n01:44:17 Radiation Risks, CT & PET Scans\n01:48:48 Environmental Carcinogens\n01:52:11 Genetic & Whole-Body MRI Screening, Colonoscopy\n01:58:47 Neurodegenerative Diseases, Alzheimer’s Disease, ApoE\n02:08:08 Alzheimer’s Disease & Amyloid\n02:13:58 Interventions for Brain Health, Traumatic Brain Injury (TBI)\n02:21:26 Accidental Death, “Deaths of Despair”, Fentanyl Crisis\n02:31:20 Fall Risk & Stability, 4 Pillars of Strength Training\n02:41:05 Emotional Health\n02:53:45 Mortality & Preserving Relationship Quality\n03:02:20 Relationships vs. Outcomes, Deconstructing Emotions\n03:09:34 Treatment Centers, Emotional Processing & Recovery\n03:16:34 Tool: Inner Monologue & Anger, Redirecting Self-Talk\n03:27:37 Zero-Cost Support, YouTube Feedback, Spotify & Apple Reviews, Sponsors, Momentous, Social Media, Neural Network Newsletter\n\nTitle Card Photo Credit: Mike Blabac - https://www.blabacphoto.com\n\nDisclaimer: https://hubermanlab.com/disclaimer",
-    //                 "thumbnails": {
-    //                     "default": {
-    //                         "url": "https://i.ytimg.com/vi/ufsIA5NARIo/default.jpg",
-    //                         "width": 120,
-    //                         "height": 90
-    //                     },
-    //                     "medium": {
-    //                         "url": "https://i.ytimg.com/vi/ufsIA5NARIo/mqdefault.jpg",
-    //                         "width": 320,
-    //                         "height": 180
-    //                     },
-    //                     "high": {
-    //                         "url": "https://i.ytimg.com/vi/ufsIA5NARIo/hqdefault.jpg",
-    //                         "width": 480,
-    //                         "height": 360
-    //                     },
-    //                     "standard": {
-    //                         "url": "https://i.ytimg.com/vi/ufsIA5NARIo/sddefault.jpg",
-    //                         "width": 640,
-    //                         "height": 480
-    //                     },
-    //                     "maxres": {
-    //                         "url": "https://i.ytimg.com/vi/ufsIA5NARIo/maxresdefault.jpg",
-    //                         "width": 1280,
-    //                         "height": 720
-    //                     }
-    //                 },
-    //                 "channelTitle": "Andrew Huberman",
-    //                 "tags": [
-    //                     "andrew huberman",
-    //                     "huberman lab podcast",
-    //                     "huberman podcast",
-    //                     "dr. andrew huberman",
-    //                     "neuroscience",
-    //                     "huberman lab",
-    //                     "andrew huberman podcast",
-    //                     "the huberman lab podcast",
-    //                     "science podcast",
-    //                     "physical health",
-    //                     "lifespan",
-    //                     "Peter Attia",
-    //                     "Dr. Peter Attia",
-    //                     "Peter Attia MD"
-    //                 ],
-    //                 "categoryId": "28",
-    //                 "liveBroadcastContent": "none",
-    //                 "defaultLanguage": "en",
-    //                 "localized": {
-    //                     "title": "Dr. Peter Attia: Improve Vitality, Emotional & Physical Health & Lifespan | Huberman Lab Podcast",
-    //                     "description": "In this episode, my guest is Peter Attia, M.D. He completed his medical and advanced training at Stanford University School of Medicine, Johns Hopkins School of Medicine and the National Institutes of Health (NIH). Dr. Attia is host of the health and medicine podcast, The Drive, and the author of a new book, “Outlive: The Science & Art of Longevity,” which examines disease prevention and healthy aging, including emotional health. He explains the leading causes of death worldwide and how to measure one’s risk of death and mitigate each risk factor. Dr. Attia shares how, in addition to blood-based markers of lipids and hormones, there are behavioral measures and interventions, and key aspects of emotional health (i.e., relationships, emotional stability, purpose, etc.) that fundamentally impact our physical health and longevity, and how to assess and adjust our emotional health. This episode is rich with actionable information related to disease screening and biomarker testing, nutritional, exercise, behavior and prescription-based tools that area useful to all people regardless of age, male or female, and that can significantly improve vitality, health and lifespan.\n\n#HubermanLab #Science #Science \n\nThank you to our sponsors\nAG1 (Athletic Greens): https://athleticgreens.com/huberman\nEight Sleep: https://eightsleep.com/huberman\nLMNT: https://drinklmnt.com/huberman  \nHVMN: https://hvmn.com/huberman\nInsideTracker: https://www.insidetracker.com/huberman\n\nSupplements from Momentous\nhttps://www.livemomentous.com/huberman\n\nHuberman Lab Social & Website\nInstagram: https://www.instagram.com/hubermanlab \nTwitter: https://twitter.com/hubermanlab \nFacebook: https://www.facebook.com/hubermanlab \nLinkedIn: https://www.linkedin.com/in/andrew-huberman\nWebsite: https://hubermanlab.com \nNewsletter: https://hubermanlab.com/neural-network\n\nDr. Peter Attia\nWebsite: https://peterattiamd.com \nThe Peter Attia Drive Podcast: https://peterattiamd.com/podcast\nNewsletter: https://peterattiamd.com/newsletter\nTwitter: https://twitter.com/PeterAttiaMD \nInstagram: https://www.instagram.com/peterattiamd\nYouTube: https://www.youtube.com/c/PeterAttiaMD \nFacebook: https://www.facebook.com/peterattiamd \n\nArticles\nA Wandering Mind Is an Unhappy Mind: https://bit.ly/40ccfw8\n\nBooks\nOutlive: The Science & Art of Longevity book: https://peterattiamd.com/outlive\nThe Road to Character: https://amzn.to/42nMx9H\n\nOther Resources\nWithings Blood Pressure Cuff: https://amzn.to/42pG3a7\nOmron Blood Pressure Cuff: https://amzn.to/3LEnbyj\nPrenuvo Whole-Body MRI: https://www.prenuvo.com \nBiograph: https://www.biograph.com \nThe Fentanyl Crisis and Why Everyone Should Be Paying Attention (The Drive podcast episode): https://peterattiamd.com/anthonyhipolito\n\nTimestamps\n00:00:00 Dr. Peter Attia\n00:03:22 Sponsors: Eight Sleep, LMNT, HVMN, Momentous\n00:07:34 Lifespan vs. Healthspan\n00:10:54 “4 Horseman of Death”, Diseases of Atherosclerosis\n00:14:44 Tool: Hypertension & Stroke, Blood Pressure Testing \n00:23:14 Preventing Atherosclerosis, Smoking & Vaping, Pollution\n00:32:24 Sponsor: AG-1 (Athletic Greens)\n00:33:29 Cholesterol, ApoB\n00:42:21 Cholesterol Levels, LDL & ApoB Testing\n00:49:29 ApoB Levels & Atherosclerosis, Causality\n01:01:06 ApoB Reduction, Insulin Resistance, Statins, Ezetimibe, PCSK9 Inhibitors\n01:12:30 Monitoring ApoB\n01:17:12 Sponsor: InsideTracker\n01:18:30 Reducing Blood Pressure, Exercise & Sleep\n01:20:50 High Blood Pressure & Kidneys\n01:23:11 Alcohol, Sleep & Disease Risk\n01:31:21 Cancer & Cancer Risks: Genetics, Smoking & Obesity\n01:39:47 Cancer Screening & Survival\n01:44:17 Radiation Risks, CT & PET Scans\n01:48:48 Environmental Carcinogens\n01:52:11 Genetic & Whole-Body MRI Screening, Colonoscopy\n01:58:47 Neurodegenerative Diseases, Alzheimer’s Disease, ApoE\n02:08:08 Alzheimer’s Disease & Amyloid\n02:13:58 Interventions for Brain Health, Traumatic Brain Injury (TBI)\n02:21:26 Accidental Death, “Deaths of Despair”, Fentanyl Crisis\n02:31:20 Fall Risk & Stability, 4 Pillars of Strength Training\n02:41:05 Emotional Health\n02:53:45 Mortality & Preserving Relationship Quality\n03:02:20 Relationships vs. Outcomes, Deconstructing Emotions\n03:09:34 Treatment Centers, Emotional Processing & Recovery\n03:16:34 Tool: Inner Monologue & Anger, Redirecting Self-Talk\n03:27:37 Zero-Cost Support, YouTube Feedback, Spotify & Apple Reviews, Sponsors, Momentous, Social Media, Neural Network Newsletter\n\nTitle Card Photo Credit: Mike Blabac - https://www.blabacphoto.com\n\nDisclaimer: https://hubermanlab.com/disclaimer"
-    //                 },
-    //                 "defaultAudioLanguage": "en"
-    //             },
-    //             "contentDetails": {
-    //                 "duration": "PT3H29M56S",
-    //                 "dimension": "2d",
-    //                 "definition": "hd",
-    //                 "caption": "false",
-    //                 "licensedContent": true,
-    //                 "contentRating": {},
-    //                 "projection": "rectangular"
-    //             },
-    //             "statistics": {
-    //                 "viewCount": "414134",
-    //                 "likeCount": "8987",
-    //                 "favoriteCount": "0",
-    //                 "commentCount": "1011"
-    //             }
-    //         }
-    //     ],
-    //     "pageInfo": {
-    //         "totalResults": 1,
-    //         "resultsPerPage": 1
-    //     }
-    // }
+    {
+        "kind": "youtube#videoListResponse",
+        "etag": "Fvy5TK796boBrqw9eV7EZxq_Xjw",
+        "items": [
+            {
+                "kind": "youtube#video",
+                "etag": "mtNwom87evCm2XGLywA7f0uVsR4",
+                "id": "ufsIA5NARIo",
+                "snippet": {
+                    "publishedAt": "2023-03-20T12:00:47Z",
+                    "channelId": "UC2D2CMWXMOVWx7giW1n3LIg",
+                    "title": "Dr. Peter Attia: Improve Vitality, Emotional & Physical Health & Lifespan | Huberman Lab Podcast",
+                    "description": "In this episode, my guest is Peter Attia, M.D. He completed his medical and advanced training at Stanford University School of Medicine, Johns Hopkins School of Medicine and the National Institutes of Health (NIH). Dr. Attia is host of the health and medicine podcast, The Drive, and the author of a new book, “Outlive: The Science & Art of Longevity,” which examines disease prevention and healthy aging, including emotional health. He explains the leading causes of death worldwide and how to measure one’s risk of death and mitigate each risk factor. Dr. Attia shares how, in addition to blood-based markers of lipids and hormones, there are behavioral measures and interventions, and key aspects of emotional health (i.e., relationships, emotional stability, purpose, etc.) that fundamentally impact our physical health and longevity, and how to assess and adjust our emotional health. This episode is rich with actionable information related to disease screening and biomarker testing, nutritional, exercise, behavior and prescription-based tools that area useful to all people regardless of age, male or female, and that can significantly improve vitality, health and lifespan.\n\n#HubermanLab #Science #Science \n\nThank you to our sponsors\nAG1 (Athletic Greens): https://athleticgreens.com/huberman\nEight Sleep: https://eightsleep.com/huberman\nLMNT: https://drinklmnt.com/huberman  \nHVMN: https://hvmn.com/huberman\nInsideTracker: https://www.insidetracker.com/huberman\n\nSupplements from Momentous\nhttps://www.livemomentous.com/huberman\n\nHuberman Lab Social & Website\nInstagram: https://www.instagram.com/hubermanlab \nTwitter: https://twitter.com/hubermanlab \nFacebook: https://www.facebook.com/hubermanlab \nLinkedIn: https://www.linkedin.com/in/andrew-huberman\nWebsite: https://hubermanlab.com \nNewsletter: https://hubermanlab.com/neural-network\n\nDr. Peter Attia\nWebsite: https://peterattiamd.com \nThe Peter Attia Drive Podcast: https://peterattiamd.com/podcast\nNewsletter: https://peterattiamd.com/newsletter\nTwitter: https://twitter.com/PeterAttiaMD \nInstagram: https://www.instagram.com/peterattiamd\nYouTube: https://www.youtube.com/c/PeterAttiaMD \nFacebook: https://www.facebook.com/peterattiamd \n\nArticles\nA Wandering Mind Is an Unhappy Mind: https://bit.ly/40ccfw8\n\nBooks\nOutlive: The Science & Art of Longevity book: https://peterattiamd.com/outlive\nThe Road to Character: https://amzn.to/42nMx9H\n\nOther Resources\nWithings Blood Pressure Cuff: https://amzn.to/42pG3a7\nOmron Blood Pressure Cuff: https://amzn.to/3LEnbyj\nPrenuvo Whole-Body MRI: https://www.prenuvo.com \nBiograph: https://www.biograph.com \nThe Fentanyl Crisis and Why Everyone Should Be Paying Attention (The Drive podcast episode): https://peterattiamd.com/anthonyhipolito\n\nTimestamps\n00:00:00 Dr. Peter Attia\n00:03:22 Sponsors: Eight Sleep, LMNT, HVMN, Momentous\n00:07:34 Lifespan vs. Healthspan\n00:10:54 “4 Horseman of Death”, Diseases of Atherosclerosis\n00:14:44 Tool: Hypertension & Stroke, Blood Pressure Testing \n00:23:14 Preventing Atherosclerosis, Smoking & Vaping, Pollution\n00:32:24 Sponsor: AG-1 (Athletic Greens)\n00:33:29 Cholesterol, ApoB\n00:42:21 Cholesterol Levels, LDL & ApoB Testing\n00:49:29 ApoB Levels & Atherosclerosis, Causality\n01:01:06 ApoB Reduction, Insulin Resistance, Statins, Ezetimibe, PCSK9 Inhibitors\n01:12:30 Monitoring ApoB\n01:17:12 Sponsor: InsideTracker\n01:18:30 Reducing Blood Pressure, Exercise & Sleep\n01:20:50 High Blood Pressure & Kidneys\n01:23:11 Alcohol, Sleep & Disease Risk\n01:31:21 Cancer & Cancer Risks: Genetics, Smoking & Obesity\n01:39:47 Cancer Screening & Survival\n01:44:17 Radiation Risks, CT & PET Scans\n01:48:48 Environmental Carcinogens\n01:52:11 Genetic & Whole-Body MRI Screening, Colonoscopy\n01:58:47 Neurodegenerative Diseases, Alzheimer’s Disease, ApoE\n02:08:08 Alzheimer’s Disease & Amyloid\n02:13:58 Interventions for Brain Health, Traumatic Brain Injury (TBI)\n02:21:26 Accidental Death, “Deaths of Despair”, Fentanyl Crisis\n02:31:20 Fall Risk & Stability, 4 Pillars of Strength Training\n02:41:05 Emotional Health\n02:53:45 Mortality & Preserving Relationship Quality\n03:02:20 Relationships vs. Outcomes, Deconstructing Emotions\n03:09:34 Treatment Centers, Emotional Processing & Recovery\n03:16:34 Tool: Inner Monologue & Anger, Redirecting Self-Talk\n03:27:37 Zero-Cost Support, YouTube Feedback, Spotify & Apple Reviews, Sponsors, Momentous, Social Media, Neural Network Newsletter\n\nTitle Card Photo Credit: Mike Blabac - https://www.blabacphoto.com\n\nDisclaimer: https://hubermanlab.com/disclaimer",
+                    "thumbnails": {
+                        "default": {
+                            "url": "https://i.ytimg.com/vi/ufsIA5NARIo/default.jpg",
+                            "width": 120,
+                            "height": 90
+                        },
+                        "medium": {
+                            "url": "https://i.ytimg.com/vi/ufsIA5NARIo/mqdefault.jpg",
+                            "width": 320,
+                            "height": 180
+                        },
+                        "high": {
+                            "url": "https://i.ytimg.com/vi/ufsIA5NARIo/hqdefault.jpg",
+                            "width": 480,
+                            "height": 360
+                        },
+                        "standard": {
+                            "url": "https://i.ytimg.com/vi/ufsIA5NARIo/sddefault.jpg",
+                            "width": 640,
+                            "height": 480
+                        },
+                        "maxres": {
+                            "url": "https://i.ytimg.com/vi/ufsIA5NARIo/maxresdefault.jpg",
+                            "width": 1280,
+                            "height": 720
+                        }
+                    },
+                    "channelTitle": "Andrew Huberman",
+                    "tags": [
+                        "andrew huberman",
+                        "huberman lab podcast",
+                        "huberman podcast",
+                        "dr. andrew huberman",
+                        "neuroscience",
+                        "huberman lab",
+                        "andrew huberman podcast",
+                        "the huberman lab podcast",
+                        "science podcast",
+                        "physical health",
+                        "lifespan",
+                        "Peter Attia",
+                        "Dr. Peter Attia",
+                        "Peter Attia MD"
+                    ],
+                    "categoryId": "28",
+                    "liveBroadcastContent": "none",
+                    "defaultLanguage": "en",
+                    "localized": {
+                        "title": "Dr. Peter Attia: Improve Vitality, Emotional & Physical Health & Lifespan | Huberman Lab Podcast",
+                        "description": "In this episode, my guest is Peter Attia, M.D. He completed his medical and advanced training at Stanford University School of Medicine, Johns Hopkins School of Medicine and the National Institutes of Health (NIH). Dr. Attia is host of the health and medicine podcast, The Drive, and the author of a new book, “Outlive: The Science & Art of Longevity,” which examines disease prevention and healthy aging, including emotional health. He explains the leading causes of death worldwide and how to measure one’s risk of death and mitigate each risk factor. Dr. Attia shares how, in addition to blood-based markers of lipids and hormones, there are behavioral measures and interventions, and key aspects of emotional health (i.e., relationships, emotional stability, purpose, etc.) that fundamentally impact our physical health and longevity, and how to assess and adjust our emotional health. This episode is rich with actionable information related to disease screening and biomarker testing, nutritional, exercise, behavior and prescription-based tools that area useful to all people regardless of age, male or female, and that can significantly improve vitality, health and lifespan.\n\n#HubermanLab #Science #Science \n\nThank you to our sponsors\nAG1 (Athletic Greens): https://athleticgreens.com/huberman\nEight Sleep: https://eightsleep.com/huberman\nLMNT: https://drinklmnt.com/huberman  \nHVMN: https://hvmn.com/huberman\nInsideTracker: https://www.insidetracker.com/huberman\n\nSupplements from Momentous\nhttps://www.livemomentous.com/huberman\n\nHuberman Lab Social & Website\nInstagram: https://www.instagram.com/hubermanlab \nTwitter: https://twitter.com/hubermanlab \nFacebook: https://www.facebook.com/hubermanlab \nLinkedIn: https://www.linkedin.com/in/andrew-huberman\nWebsite: https://hubermanlab.com \nNewsletter: https://hubermanlab.com/neural-network\n\nDr. Peter Attia\nWebsite: https://peterattiamd.com \nThe Peter Attia Drive Podcast: https://peterattiamd.com/podcast\nNewsletter: https://peterattiamd.com/newsletter\nTwitter: https://twitter.com/PeterAttiaMD \nInstagram: https://www.instagram.com/peterattiamd\nYouTube: https://www.youtube.com/c/PeterAttiaMD \nFacebook: https://www.facebook.com/peterattiamd \n\nArticles\nA Wandering Mind Is an Unhappy Mind: https://bit.ly/40ccfw8\n\nBooks\nOutlive: The Science & Art of Longevity book: https://peterattiamd.com/outlive\nThe Road to Character: https://amzn.to/42nMx9H\n\nOther Resources\nWithings Blood Pressure Cuff: https://amzn.to/42pG3a7\nOmron Blood Pressure Cuff: https://amzn.to/3LEnbyj\nPrenuvo Whole-Body MRI: https://www.prenuvo.com \nBiograph: https://www.biograph.com \nThe Fentanyl Crisis and Why Everyone Should Be Paying Attention (The Drive podcast episode): https://peterattiamd.com/anthonyhipolito\n\nTimestamps\n00:00:00 Dr. Peter Attia\n00:03:22 Sponsors: Eight Sleep, LMNT, HVMN, Momentous\n00:07:34 Lifespan vs. Healthspan\n00:10:54 “4 Horseman of Death”, Diseases of Atherosclerosis\n00:14:44 Tool: Hypertension & Stroke, Blood Pressure Testing \n00:23:14 Preventing Atherosclerosis, Smoking & Vaping, Pollution\n00:32:24 Sponsor: AG-1 (Athletic Greens)\n00:33:29 Cholesterol, ApoB\n00:42:21 Cholesterol Levels, LDL & ApoB Testing\n00:49:29 ApoB Levels & Atherosclerosis, Causality\n01:01:06 ApoB Reduction, Insulin Resistance, Statins, Ezetimibe, PCSK9 Inhibitors\n01:12:30 Monitoring ApoB\n01:17:12 Sponsor: InsideTracker\n01:18:30 Reducing Blood Pressure, Exercise & Sleep\n01:20:50 High Blood Pressure & Kidneys\n01:23:11 Alcohol, Sleep & Disease Risk\n01:31:21 Cancer & Cancer Risks: Genetics, Smoking & Obesity\n01:39:47 Cancer Screening & Survival\n01:44:17 Radiation Risks, CT & PET Scans\n01:48:48 Environmental Carcinogens\n01:52:11 Genetic & Whole-Body MRI Screening, Colonoscopy\n01:58:47 Neurodegenerative Diseases, Alzheimer’s Disease, ApoE\n02:08:08 Alzheimer’s Disease & Amyloid\n02:13:58 Interventions for Brain Health, Traumatic Brain Injury (TBI)\n02:21:26 Accidental Death, “Deaths of Despair”, Fentanyl Crisis\n02:31:20 Fall Risk & Stability, 4 Pillars of Strength Training\n02:41:05 Emotional Health\n02:53:45 Mortality & Preserving Relationship Quality\n03:02:20 Relationships vs. Outcomes, Deconstructing Emotions\n03:09:34 Treatment Centers, Emotional Processing & Recovery\n03:16:34 Tool: Inner Monologue & Anger, Redirecting Self-Talk\n03:27:37 Zero-Cost Support, YouTube Feedback, Spotify & Apple Reviews, Sponsors, Momentous, Social Media, Neural Network Newsletter\n\nTitle Card Photo Credit: Mike Blabac - https://www.blabacphoto.com\n\nDisclaimer: https://hubermanlab.com/disclaimer"
+                    },
+                    "defaultAudioLanguage": "en"
+                },
+                "contentDetails": {
+                    "duration": "PT3H29M56S",
+                    "dimension": "2d",
+                    "definition": "hd",
+                    "caption": "false",
+                    "licensedContent": true,
+                    "contentRating": {},
+                    "projection": "rectangular"
+                },
+                "statistics": {
+                    "viewCount": "414134",
+                    "likeCount": "8987",
+                    "favoriteCount": "0",
+                    "commentCount": "1011"
+                }
+            }
+        ],
+        "pageInfo": {
+            "totalResults": 1,
+            "resultsPerPage": 1
+        }
+    }
 
 ]
