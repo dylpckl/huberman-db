@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { videos } from "../app/lib/videos";
 import Video from "./Video";
+import VideoClient from "./VideoClient";
 
 interface Tag {
   value: string;
@@ -116,13 +117,19 @@ export default function Filter() {
           <p>{v.items[0].snippet.tags}</p>
           <p>{v.items[0].id}</p>
         </div>
+        <hr />
       ))} */}
-      <hr />
       <TagFilter
         tags={tags}
         onChange={handleUpdateTags}
       />
       <hr />
+      {/* <VideoList videos={filteredVideos}>
+        <>
+          <p>test</p>
+          
+        </>
+      </VideoList> */}
       <VideoList videos={filteredVideos} />
     </>
   );
@@ -159,7 +166,14 @@ function VideoList({ videos }) {
   return (
     <div>
       <h1>videos</h1>
-      {videos && videos.map((video: Video) => <p>{video.items[0].id}</p>)}
+      {/* {videos && videos.map((video: Video) => <p>{video.items[0].id}</p>)} */}
+
+      {/* <Video videoId="K-TW2Chpz4k" /> */}
+
+      {videos &&
+        videos.map((video: Video) => (
+          <VideoClient videoId={video.items[0].id} />
+        ))}
     </div>
   );
 }
