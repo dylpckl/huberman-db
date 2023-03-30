@@ -1,5 +1,5 @@
 import "./globals.css";
-import { TagProvider } from "./context";
+// import { TagProvider } from "./context";
 
 export const metadata = {
   title: "Create Next App",
@@ -14,7 +14,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <TagProvider>{children}</TagProvider>
+        {/* <TagProvider>{children}</TagProvider> */}
+        {children}
       </body>
     </html>
   );

@@ -9,21 +9,36 @@ interface Tag {
   active: boolean;
 }
 
-const testTags: Tag[] = [
-  { value: "improve sleep", active: false },
-  { value: "sleep quality", active: false },
-  { value: "sleep better", active: false },
-  { value: "how to slee better", active: false },
-  { value: "how to improv sleep", active: false },
-  { value: "optimize sleep", active: false },
-  { value: "get better slee", active: false },
-  { value: "circadian clock", active: false },
-  { value: "circadian rhythm", active: false },
-  { value: "stay asleep", active: false },
-  { value: "fall back alsee", active: false },
-  { value: "lifespan", active: false },
-  { value: "procrastination", active: false },
-  { value: "andrew huberman", active: false },
+// const testTags: Tag[] = [
+//   { value: "improve sleep", active: false },
+//   { value: "sleep quality", active: false },
+//   { value: "sleep better", active: false },
+//   { value: "how to slee better", active: false },
+//   { value: "how to improv sleep", active: false },
+//   { value: "optimize sleep", active: false },
+//   { value: "get better slee", active: false },
+//   { value: "circadian clock", active: false },
+//   { value: "circadian rhythm", active: false },
+//   { value: "stay asleep", active: false },
+//   { value: "fall back alsee", active: false },
+//   { value: "lifespan", active: false },
+//   { value: "procrastination", active: false },
+//   { value: "andrew huberman", active: false },
+// ];
+
+const excludeTags = [
+  "andrew huberman",
+  "andrew d. huberman",
+  "dr. andrew huberman",
+  "dr andrew huberman",
+  "huberman lab",
+  "huberman podcast",
+  "science podcast",
+  "science",
+  "huberman",
+  "andrew huberman podcast",
+  "huberman lab podcast",
+  "the huberman lab podcast",
 ];
 
 let nextId = 0; // initialize a number to increment for the purpose of creating id's
@@ -55,44 +70,27 @@ function filterVideos(videos: Video[], tags: Tag[]): Video[] {
 
 export default function Filter(videos: Video[]) {
   const [tags, setTags] = useState<Tag[]>(() => {
-    const initialState = someFunction(videos);
+    const initialState = getInitialTags(videos);
     return initialState;
   });
 
-  function someFunction(videos) {
+  function getInitialTags(videos) {
     const tagsArr: Tag[] = [];
     const tagsToAdd = videos.videos.map((video) => {
       video.items[0].snippet.tags.map((tag) => {
-        if (!tagsArr.some((t) => t.value === tag)) {
-          tagsArr.push({ value: tag, active: false });
+        if (!excludeTags.some((t) => t === tag.toLowerCase())) {
+          if (!tagsArr.some((t) => t.value === tag)) {
+            tagsArr.push({ value: tag, active: false });
+          }
         }
       });
     });
-    console.log(tagsArr);
+    // console.log(tagsArr);
     return tagsArr;
   }
 
-  console.log(videos);
+  // console.log(videos);
   const filteredVideos = filterVideos(videos, tags);
-
-  // TODO - execute a function inside useState initial state
-  // const [...] = useState(() => props.array.map(...))
-
-  // useEffect(() => {
-  //   const getTags = (videos, tags) => {
-  //     videos.videos.map((video) => {
-  //       // console.log(video.items[0].snippet.tags, tags);
-  //       video.items[0].snippet.tags.map((tag) => {
-  //         // console.log(tags, tag, tags.some(t=>t.value !== tag));
-  //         if (!tags.some((t) => t.value === tag)) {
-  //           setTags([...tags, { tag, checked: false }]);
-  //         }
-  //         return tags;
-  //       });
-  //     });
-  //   };
-  //   getTags(videos, tags);
-  // }, []);
 
   // This function is our event handler that will be sent down the child functions
   // see https://react.dev/learn/updating-arrays-in-state#updating-objects-inside-arrays
@@ -134,19 +132,12 @@ export default function Filter(videos: Video[]) {
 
   return (
     <>
-      {/* {videos.map((v: Video) => (
-        <div key={v.items[0].id}>
-          <p>{v.items[0].snippet.tags}</p>
-          <p>{v.items[0].id}</p>
-        </div>
-        <hr />
-      ))} */}
       <TagFilter
         tags={tags}
         onChange={handleUpdateTags}
       />
       <hr />
-      {/* <VideoList videos={filteredVideos} /> */}
+      <VideoList videos={filteredVideos} />
     </>
   );
 }
