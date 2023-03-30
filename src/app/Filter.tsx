@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // import { videos } from "../app/lib/videos";
 // import Video from "./Video";
 import VideoClient from "./VideoClient";
@@ -31,7 +31,7 @@ let nextId = 0; // initialize a number to increment for the purpose of creating 
 // This function accepts a list of videos and returns only those that have tags that are
 // active = true in state
 function filterVideos(videos: Video[], tags: Tag[]): Video[] {
-    console.log(videos,tags)
+  // console.log(videos, tags);
   // 1. use filter() method on the videos array to return a new array videos
   // 2. use some() on video.items[0].snippet.tags to see if at least one element in the array
   //      passes the test in the provided function
@@ -39,11 +39,13 @@ function filterVideos(videos: Video[], tags: Tag[]): Video[] {
   //      use some() on the tags state array to find tags where
   //      tag.value === t from video.items[0].snippet.tags
   //      and where tag.active === true (checked)
+  console.log(tags);
   const result = videos.videos.filter((video: Video) =>
     video.items[0].snippet.tags.some((t) =>
       tags.some((tag) => tag.value === t && tag.active === true)
     )
   );
+
   // console.log(
   //   result.map((r) => r.items[0].snippet.tags),
   //   tags
@@ -52,10 +54,45 @@ function filterVideos(videos: Video[], tags: Tag[]): Video[] {
 }
 
 export default function Filter(videos: Video[]) {
-  const [tags, setTags] = useState<Tag[]>(testTags);
-  // console.log(videos);
+  const [tags, setTags] = useState<Tag[]>(() => {
+    const initialState = someFunction(videos);
+    return initialState;
+  });
 
+  function someFunction(videos) {
+    const tagsArr: Tag[] = [];
+    const tagsToAdd = videos.videos.map((video) => {
+      video.items[0].snippet.tags.map((tag) => {
+        if (!tagsArr.some((t) => t.value === tag)) {
+          tagsArr.push({ value: tag, active: false });
+        }
+      });
+    });
+    console.log(tagsArr);
+    return tagsArr;
+  }
+
+  console.log(videos);
   const filteredVideos = filterVideos(videos, tags);
+
+  // TODO - execute a function inside useState initial state
+  // const [...] = useState(() => props.array.map(...))
+
+  // useEffect(() => {
+  //   const getTags = (videos, tags) => {
+  //     videos.videos.map((video) => {
+  //       // console.log(video.items[0].snippet.tags, tags);
+  //       video.items[0].snippet.tags.map((tag) => {
+  //         // console.log(tags, tag, tags.some(t=>t.value !== tag));
+  //         if (!tags.some((t) => t.value === tag)) {
+  //           setTags([...tags, { tag, checked: false }]);
+  //         }
+  //         return tags;
+  //       });
+  //     });
+  //   };
+  //   getTags(videos, tags);
+  // }, []);
 
   // This function is our event handler that will be sent down the child functions
   // see https://react.dev/learn/updating-arrays-in-state#updating-objects-inside-arrays
@@ -109,7 +146,7 @@ export default function Filter(videos: Video[]) {
         onChange={handleUpdateTags}
       />
       <hr />
-      <VideoList videos={filteredVideos} />
+      {/* <VideoList videos={filteredVideos} /> */}
     </>
   );
 }
@@ -122,19 +159,20 @@ function TagFilter({ tags, onChange }) {
     <div>
       <h1>filter</h1>
       <ul>
-        {tags.map((tag: Tag) => (
-          <div key={tag.value}>
-            <input
-              type="checkbox"
-              // name={`${tag.value},${tag.id}`}
-              id={tag.value}
-              // pass the event handler prop into the onChange method on the input
-              // the syntax to pass an inline function is: onClick={() => alert('...')}
-              onChange={(e) => onChange(tag.value, e.target.checked)}
-            />
-            <label htmlFor={tag.value}>{tag.value}</label>
-          </div>
-        ))}
+        {tags.length > 0 &&
+          tags.map((tag: Tag) => (
+            <div key={tag.value}>
+              <input
+                type="checkbox"
+                // name={`${tag.value},${tag.id}`}
+                id={tag.value}
+                // pass the event handler prop into the onChange method on the input
+                // the syntax to pass an inline function is: onClick={() => alert('...')}
+                onChange={(e) => onChange(tag.value, e.target.checked)}
+              />
+              <label htmlFor={tag.value}>{tag.value}</label>
+            </div>
+          ))}
       </ul>
     </div>
   );

@@ -5,13 +5,11 @@ const CHANNEL_ID = "UC2D2CMWXMOVWx7giW1n3LIg";
 const UPLOADS_PLAYLIST_ID = "UU2D2CMWXMOVWx7giW1n3LIg";
 const url = "https://youtube.googleapis.com/youtube/v3/";
 const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
-const videoArr: Video[] = [];
 
 // async function getUploadsPlayistId() {
 //   const res = await fetch(
 //     `${url}channels?part=contentDetails&id=${CHANNEL_ID}&key=${apiKey}`
 //   );
-
 //   return res.json();
 // }
 
@@ -30,9 +28,9 @@ async function getPlaylistItems(playlistId: string, pageToken?: string) {
 
 async function getPlaylistItems2(playlistId: string, pageToken?: string) {
   const requestUrl = pageToken
-    ? `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50` +
+    ? `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=10` +
       `&pageToken=${pageToken}`
-    : `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50`;
+    : `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=10`;
   // console.log(requestUrl);
   const response = await fetch(requestUrl);
   const data = await response.json();
@@ -48,7 +46,7 @@ async function getPlaylistItems2(playlistId: string, pageToken?: string) {
         items: [...data.items, ...nextPageData.items],
       };
     }
-    console.log(data.items.length);
+    // console.log(data.items.length);
     return data;
   }
   // console.log(data.length);
@@ -93,14 +91,14 @@ export default async function Home() {
   // console.log(uploadsPlaylistId);
   // const playlistItems = await getPlaylistItems(UPLOADS_PLAYLIST_ID);
   const playlistItems = await getPlaylistItems2(UPLOADS_PLAYLIST_ID);
-  console.log(playlistItems);
+  // console.log(playlistItems);
 
   const videos = await fetchItems(playlistItems);
-  console.log(videos.length);
+  // console.log(videos.length);
 
   return (
     <main className="flex flex-col gap-4">
-      {/* <Filter videos={videos} /> */}
+      <Filter videos={videos} />
       <div className="text-zinc-200 grid grid-cols-4 gap-4">
         {/* {playlistItems.items.map((item) => (
           <>
