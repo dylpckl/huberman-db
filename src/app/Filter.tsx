@@ -1,8 +1,6 @@
 "use client";
 import { Fragment, useState, useEffect } from "react";
 import VideoClient from "./VideoClient";
-import { UsersIcon } from "@heroicons/react/24/outline";
-import { Combobox, Dialog, Transition } from "@headlessui/react";
 
 // TODO - re-write TagFilter component to render the checkboxes properly as per state
 
@@ -12,7 +10,7 @@ interface Tag {
   visible: boolean;
 }
 
-// A list of generic tags that I should neve include
+// A list of generic tags that I should never include
 const excludeTags = [
   "andrew huberman",
   "andrew d. huberman",
@@ -40,7 +38,7 @@ function filterVideos(videos: Video[], tags: Tag[]): Video[] {
   //      use some() on the tags state array to find tags where
   //      tag.value === t from video.items[0].snippet.tags
   //      and where tag.active === true (checked)
-  console.log(tags);
+  // console.log(tags);
   const result = videos.videos.filter((video: Video) =>
     video.items[0].snippet.tags.some((t) =>
       tags.some((tag) => tag.value === t && tag.active === true)
@@ -60,7 +58,6 @@ function filterVideos(videos: Video[], tags: Tag[]): Video[] {
 
 export default function Filter(videos: Video[]) {
   const [query, setQuery] = useState("");
-
   const [tags, setTags] = useState<Tag[]>(() => {
     // const initialState = getInitialTags(videos);
     // return initialState;
@@ -79,7 +76,7 @@ export default function Filter(videos: Video[]) {
   // This function creates the initial list of tags that exist on the videos array passed into
   function getInitialTags(videos) {
     const tagsArr: Tag[] = [];
-    const tagsToAdd = videos.videos.map((video) => {
+    const tagsToAdd = videos.videos.map((video: Video) => {
       video.items[0].snippet.tags.map((tag) => {
         if (!excludeTags.some((t) => t === tag.toLowerCase())) {
           if (!tagsArr.some((t) => t.value === tag)) {
@@ -93,11 +90,10 @@ export default function Filter(videos: Video[]) {
   }
 
   // EVENT HANDLERS ------------------------------------------------------
-
-  // This function is our event handler that will be sent down the child functions
-  // see https://react.dev/learn/updating-arrays-in-state#updating-objects-inside-arrays
+  // these are sent down to child components as props
 
   // this function updates the tags state array the active property
+  // see https://react.dev/learn/updating-arrays-in-state#updating-objects-inside-arrays
   function handleUpdateTagsActive(value: string, active: boolean) {
     // If the input is unchecked, update active to false
     if (active === false) {
@@ -137,62 +133,80 @@ export default function Filter(videos: Video[]) {
   // this event handler updates the tags state array - the visible property
   function handleUpdateTagVisible(query: string) {
     query = query.toLowerCase();
-    console.log(query, typeof query, query === "");
+    // console.log(query, typeof query, query === "");
 
     // If query is an empty string, reset tag.visible to false for all tags
-    if (query === "") {
-      setTags(
-        tags.map((tag) => {
-          return { ...tag, visible: false };
-        })
-      );
-    } else {
-      const tagsToUpdate = tags.filter((tag) =>
-        tag.value
-          .split(" ")
-          .some((word) => word.toLowerCase().startsWith(query))
-      );
+    // if (query === "") {
+    //   setTags(
+    //     tags.map((tag) => {
+    //       return { ...tag, visible: false };
+    //     })
+    //   );
+    // } else {
+    // const tagsToUpdate = tags.filter(
+    //   (tag) =>
+    //     tag.value
+    //       .split(" ") // divides tag.value into an ordered list of substrings; e.g. "one two three" -> ["one","two","three"]
+    //       // .some((word) => word.toLowerCase().startsWith(query))
+    //       .some((word) => word.toLowerCase().includes(query))
+    //   // check the array of substrings for a "word" that contains the query
+    // );
 
-      console.log(tagsToUpdate);
+    // console.log("tagsToUpdate", tagsToUpdate);
 
-      const x = tagsToUpdate.map((tagToUpdate) => {
-        if (tags.some((tag) => tag.value === tagToUpdate.value)) {
-          // console.log(
-          //   tags,
-          //   value,
-          //   tags.some((e) => e.value === value)
-          // );
-          setTags(
-            tags.map((tag) => {
-              if (tag.value === tagToUpdate.value) {
-                // Create a *new* object with changes
-                return { ...tag, visible: true };
-              }
-              // No changes
-              return tag;
-            })
-          );
+    // return tagsToUpdate.map((tagToUpdate) => {
+    //   if (tags.some((tag) => tag.value === tagToUpdate.value)) {
+    //     // console.log(
+    //     //   tags,
+    //     //   value,
+    //     //   tags.some((e) => e.value === value)
+    //     // );
+    //     setTags(
+    //       tags.map((tag) => {
+    //         // console.log("updating" + tag);
+    //         if (tag.value === tagToUpdate.value) {
+    //           // Create a *new* object with changes
+    //           return { ...tag, visible: true };
+    //         }
+    //         // No changes
+    //         return tag;
+    //       })
+    //     );
+    //   }
+    // });
+
+    // V2
+    // call setTags, map through all tags and compare value to query, set visible true
+
+    setTags(
+      tags.map((tag) => {
+        if (tag.value.includes(query)) {
+          // Create a *new* object with changes
+          return { ...tag, visible: true };
         }
-      });
+        // No changes
+        return { ...tag, visible: false };
+      })
+    );
 
-      console.log(tagsToUpdate);
-      console.log(tags.filter((tag) => tag.visible === true));
+    // console.log(tagsToUpdate);
+    // console.log(tags.filter((tag) => tag.visible === true));
 
-      // const x = tagsToUpdate.map((tagToUpdate) => {
-      //   tags.some((t) => {
-      //     if (t.value === tagToUpdate.value) {
-      //       setTags(
-      //         tags.map((tag) => {
-      //           return { ...tag, visible: true };
-      //         })
-      //       );
-      //     } else {
-      //       // No changes
-      //       return tag;
-      //     }
-      //   });
-      // });
-    }
+    // const x = tagsToUpdate.map((tagToUpdate) => {
+    //   tags.some((t) => {
+    //     if (t.value === tagToUpdate.value) {
+    //       setTags(
+    //         tags.map((tag) => {
+    //           return { ...tag, visible: true };
+    //         })
+    //       );
+    //     } else {
+    //       // No changes
+    //       return tag;
+    //     }
+    //   });
+    // });
+
     //   setTags(tags.map(tag=>{
     //     tagsToUpdate.map(t=>{
     //       if(t.value === tag.value){
@@ -276,7 +290,6 @@ export default function Filter(videos: Video[]) {
   function handleChange(e) {
     // 1. update state value 'query'
     setQuery(e.target.value);
-
     // 2. update state tags values (tag.visible === true)
     handleUpdateTagVisible(query);
   }
