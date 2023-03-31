@@ -1,33 +1,18 @@
 "use client";
 import { Fragment, useState, useEffect } from "react";
-// import { videos } from "../app/lib/videos";
-// import Video from "./Video";
 import VideoClient from "./VideoClient";
 import { UsersIcon } from "@heroicons/react/24/outline";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 
+// TODO - re-write TagFilter component to render the checkboxes properly as per state
+
 interface Tag {
   value: string;
   active: boolean;
+  visible: boolean;
 }
 
-// const testTags: Tag[] = [
-//   { value: "improve sleep", active: false },
-//   { value: "sleep quality", active: false },
-//   { value: "sleep better", active: false },
-//   { value: "how to slee better", active: false },
-//   { value: "how to improv sleep", active: false },
-//   { value: "optimize sleep", active: false },
-//   { value: "get better slee", active: false },
-//   { value: "circadian clock", active: false },
-//   { value: "circadian rhythm", active: false },
-//   { value: "stay asleep", active: false },
-//   { value: "fall back alsee", active: false },
-//   { value: "lifespan", active: false },
-//   { value: "procrastination", active: false },
-//   { value: "andrew huberman", active: false },
-// ];
-
+// A list of generic tags that I should neve include
 const excludeTags = [
   "andrew huberman",
   "andrew d. huberman",
@@ -43,10 +28,9 @@ const excludeTags = [
   "the huberman lab podcast",
 ];
 
-let nextId = 0; // initialize a number to increment for the purpose of creating id's
+// HELPER FUNTIONS ---------------------------------------------------------
 
-// This function accepts a list of videos and returns only those that have tags that are
-// active = true in state
+// This function filters the array of videos, only returning those with currently active tags
 function filterVideos(videos: Video[], tags: Tag[]): Video[] {
   // console.log(videos, tags);
   // 1. use filter() method on the videos array to return a new array videos
@@ -70,37 +54,36 @@ function filterVideos(videos: Video[], tags: Tag[]): Video[] {
   return result;
 }
 
-function filterTags(query: string, tags: Tag[]) {
-  query = query.toLowerCase();
-  console.log(query);
-
-  // return items.filter(item =>
-  //   item.name.split(' ').some(word =>
-  //     word.toLowerCase().startsWith(query)
-  //   )
-  // );
-
-  return tags.filter(tag=>
-    tag.value.split(' ').some(word=>word.toLowerCase().startsWith(query))
-    
-    // item.name.split(" ").some((word) => word.toLowerCase().startsWith(query))
-  );
-}
+// ----------------------------------------------------------------------------------------
+// FILTER.TSX COMPONENT -------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------
 
 export default function Filter(videos: Video[]) {
   const [query, setQuery] = useState("");
+  const [displayTags, setDisplayTags] = useState<Tag>([]);
   const [tags, setTags] = useState<Tag[]>(() => {
-    const initialState = getInitialTags(videos);
-    return initialState;
+    // const initialState = getInitialTags(videos);
+    // return initialState;
+
+    // does this work?
+    return getInitialTags(videos);
   });
 
+  // console.log(videos);
+  const filteredVideos = filterVideos(videos, tags);
+  // const filteredTags = filterTags(query, tags);
+  // console.log(filteredTags);
+
+  // MANAGING TAGS ------------------------------------------------------
+
+  // This function creates the initial list of tags that exist on the videos array passed into
   function getInitialTags(videos) {
     const tagsArr: Tag[] = [];
     const tagsToAdd = videos.videos.map((video) => {
       video.items[0].snippet.tags.map((tag) => {
         if (!excludeTags.some((t) => t === tag.toLowerCase())) {
           if (!tagsArr.some((t) => t.value === tag)) {
-            tagsArr.push({ value: tag, active: false });
+            tagsArr.push({ value: tag, active: false, visible: false });
           }
         }
       });
@@ -109,14 +92,13 @@ export default function Filter(videos: Video[]) {
     return tagsArr;
   }
 
-  // console.log(videos);
-  const filteredVideos = filterVideos(videos, tags);
-  const filteredTags = filterTags(query, tags);
-  console.log(filteredTags);
+  // EVENT HANDLERS ------------------------------------------------------
 
   // This function is our event handler that will be sent down the child functions
   // see https://react.dev/learn/updating-arrays-in-state#updating-objects-inside-arrays
-  function handleUpdateTags(value: string, active: boolean) {
+
+  // this function updates the tags state array the active property
+  function handleUpdateTagsActive(value: string, active: boolean) {
     // If the input is unchecked, update active to false
     if (active === false) {
       setTags(
@@ -152,15 +134,132 @@ export default function Filter(videos: Video[]) {
     }
   }
 
+  // this event handler updates the tags state array - the visible property
+  function handleUpdateTagVisible(query: string) {
+    query = query.toLowerCase();
+    console.log(query);
+
+    // If query is an empty string, reset tag.visible to false for all tags
+    if (query === "") {
+      setTags(
+        tags.map((tag) => {
+          return { ...tag, visible: false };
+        })
+      );
+    } else {
+      const tagsToUpdate = tags.filter((tag) =>
+        tag.value
+          .split(" ")
+          .some((word) => word.toLowerCase().startsWith(query))
+      );
+
+      console.log(tagsToUpdate);
+
+      const x = tagsToUpdate.map((tagToUpdate) => {
+        tags.some((t) => {
+          if (t.value === tagToUpdate.value) {
+            setTags(
+              tags.map((tag) => {
+                return { ...tag, visible: true };
+              })
+            );
+          }
+        });
+      });
+    }
+    //   setTags(tags.map(tag=>{
+    //     tagsToUpdate.map(t=>{
+    //       if(t.value === tag.value){
+
+    //       }
+    //     })
+    //   }))
+    // }
+
+    // the function returns an array via tags.filter
+    // the callback passed into .filter takes argument 'tag'
+    // tag.value.split divides the query string into an ordered list of substrings and places them into an array
+    // which allows us to call .some on the substring array
+    // passing a callback function which returns 'words' that are converted to lowercase
+    // and then we check if the word starts with the query value
+    // re
+
+    //   tags.filter((tag) =>
+    //   tag.value
+    //     .split(" ")
+    //     .some((word) => word.toLowerCase().startsWith(query))
+    // )
+
+    // // aproach one - build a list of tags that match query, then match to the value of any in tags and set visible to true
+
+    // update all tags in tagsToUpdate!!
+
+    // check two arrays compare two arrays (some + )
+
+    // setTags(tags.map((tag) => {}));
+
+    // return tags.map(tag=>{
+    //   if(tag.value)
+    // })
+
+    // const updateTags = tagsToUpdate.map(tagToUpdate=>
+    //   if (tags.some((tag) => tag.value !== value)) {
+    //     // console.log(
+    //     //   tags,
+    //     //   value,
+    //     //   tags.some((e) => e.value === value)
+    //     // );
+    //     setTags(
+    //       tags.map((tag) => {
+    //         if (tag.value === value) {
+    //           // Create a *new* object with changes
+    //           return { ...tag, active: true };
+    //         }
+    //         // No changes
+    //         return tag;
+    //       })
+    //     );
+    //   }
+    // )
+
+    // return updateTags
+
+    // approach two - ??
+
+    // V2 -------------------------
+    // the point of this function is to update state
+    // actually, i want to set visible:true
+    // we want to update a state array and the objects inside of it
+    // see: https://react.dev/learn/updating-arrays-in-state
+    // see: https://react.dev/learn/updating-objects-in-state
+
+    //   const updatedTags = tagsToUpdate.map(tag =>
+    //     setTags(
+    //       tags.map((tag)=>
+    //       return)
+    //     )
+    //     tag.active===true
+
+    //   return updatedTags
+    // }
+
+    // event handler sent down to the searchbar to update state value `query`
+  }
+
+  // This event handler function serves two purposes:
   function handleChange(e) {
+    // 1. update state value 'query'
     setQuery(e.target.value);
+
+    // 2. update state tags values (tag.visible === true)
+    handleUpdateTagVisible(query);
   }
 
   return (
     <>
       <TagFilter
         tags={tags}
-        onChange={handleUpdateTags}
+        onChange={handleUpdateTagsActive}
         searchOnChange={handleChange}
       />
       <hr />
@@ -169,10 +268,15 @@ export default function Filter(videos: Video[]) {
   );
 }
 
+// COMPONENTS ----------------------------------------------------------
+
 // TagFilter component that accepts props from Parent component:
 //   1. state value 'tags'
 //   2. event handler
+//  always renders tags state array, only those with active:true
 function TagFilter({ query, tags, onChange, searchOnChange }) {
+  // if (filteredTags === undefined) return <h1>tags loading</h1>;
+
   return (
     <div>
       <h1>filter</h1>
@@ -186,9 +290,37 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
       />
 
       <ul>
-        {tags.length > 0 &&
+        {/* {tags &&
+          tags.map((tag: Tag) => {
+            // console.log(tag.value, tag.visible);
+
+            return (
+              <div key={tag.value}>
+                <div
+                  className={`flex ${
+                    tag.visible === true ? 'visible' : "invisible"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    // name={`${tag.value},${tag.id}`}
+                    id={tag.value}
+                    // pass the event handler prop into the onChange method on the input
+                    // the syntax to pass an inline function is: onClick={() => alert('...')}
+                    onChange={(e) => onChange(tag.value, e.target.checked)}
+                  />
+                  <label htmlFor={tag.value}>{tag.value}</label>
+                </div>
+              </div>
+            );
+          })} */}
+
+        {tags &&
           tags.map((tag: Tag) => (
-            <div key={tag.value}>
+            <div
+              key={tag.value}
+              className="flex"
+            >
               <input
                 type="checkbox"
                 // name={`${tag.value},${tag.id}`}
@@ -197,7 +329,9 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
                 // the syntax to pass an inline function is: onClick={() => alert('...')}
                 onChange={(e) => onChange(tag.value, e.target.checked)}
               />
-              <label htmlFor={tag.value}>{tag.value}</label>
+              <label htmlFor={tag.value}>{tag.active}</label>
+              <hr />
+              <p>{tag.visible.toString()}</p>
             </div>
           ))}
       </ul>
