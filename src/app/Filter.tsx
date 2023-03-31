@@ -60,7 +60,7 @@ function filterVideos(videos: Video[], tags: Tag[]): Video[] {
 
 export default function Filter(videos: Video[]) {
   const [query, setQuery] = useState("");
-  const [displayTags, setDisplayTags] = useState<Tag>([]);
+
   const [tags, setTags] = useState<Tag[]>(() => {
     // const initialState = getInitialTags(videos);
     // return initialState;
@@ -137,7 +137,7 @@ export default function Filter(videos: Video[]) {
   // this event handler updates the tags state array - the visible property
   function handleUpdateTagVisible(query: string) {
     query = query.toLowerCase();
-    console.log(query);
+    console.log(query, typeof query, query === "");
 
     // If query is an empty string, reset tag.visible to false for all tags
     if (query === "") {
@@ -156,16 +156,42 @@ export default function Filter(videos: Video[]) {
       console.log(tagsToUpdate);
 
       const x = tagsToUpdate.map((tagToUpdate) => {
-        tags.some((t) => {
-          if (t.value === tagToUpdate.value) {
-            setTags(
-              tags.map((tag) => {
+        if (tags.some((tag) => tag.value === tagToUpdate.value)) {
+          // console.log(
+          //   tags,
+          //   value,
+          //   tags.some((e) => e.value === value)
+          // );
+          setTags(
+            tags.map((tag) => {
+              if (tag.value === tagToUpdate.value) {
+                // Create a *new* object with changes
                 return { ...tag, visible: true };
-              })
-            );
-          }
-        });
+              }
+              // No changes
+              return tag;
+            })
+          );
+        }
       });
+
+      console.log(tagsToUpdate);
+      console.log(tags.filter((tag) => tag.visible === true));
+
+      // const x = tagsToUpdate.map((tagToUpdate) => {
+      //   tags.some((t) => {
+      //     if (t.value === tagToUpdate.value) {
+      //       setTags(
+      //         tags.map((tag) => {
+      //           return { ...tag, visible: true };
+      //         })
+      //       );
+      //     } else {
+      //       // No changes
+      //       return tag;
+      //     }
+      //   });
+      // });
     }
     //   setTags(tags.map(tag=>{
     //     tagsToUpdate.map(t=>{
@@ -290,32 +316,62 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
       />
 
       <ul>
-        {/* {tags &&
-          tags.map((tag: Tag) => {
-            // console.log(tag.value, tag.visible);
-
-            return (
-              <div key={tag.value}>
-                <div
-                  className={`flex ${
-                    tag.visible === true ? 'visible' : "invisible"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    // name={`${tag.value},${tag.id}`}
-                    id={tag.value}
-                    // pass the event handler prop into the onChange method on the input
-                    // the syntax to pass an inline function is: onClick={() => alert('...')}
-                    onChange={(e) => onChange(tag.value, e.target.checked)}
-                  />
-                  <label htmlFor={tag.value}>{tag.value}</label>
-                </div>
-              </div>
-            );
-          })} */}
+        {/* <TagsList
+          tags={tags}
+          onChange={onChange}
+        /> */}
 
         {tags &&
+          tags
+            .filter((tag: Tag) => tag.visible === true)
+            .map((filteredTag: Tag) => {
+              return (
+                // console.log(tag.value, tag.visible);
+
+                <div key={filteredTag.value}>
+                  <div>
+                    <input
+                      type="checkbox"
+                      // name={`${tag.value},${tag.id}`}
+                      id={filteredTag.value}
+                      // pass the event handler prop into the onChange method on the input
+                      // the syntax to pass an inline function is: onClick={() => alert('...')}
+                      onChange={(e) =>
+                        onChange(filteredTag.value, e.target.checked)
+                      }
+                    />
+                    <label htmlFor={filteredTag.value}>
+                      {filteredTag.value}
+                    </label>
+                  </div>
+                </div>
+              );
+            })}
+
+        {/* {tags &&
+          tags.map((tag: Tag) => (
+            // console.log(tag.value, tag.visible);
+
+            <div key={tag.value}>
+              <div
+                className={`flex ${
+                  tag.visible === true ? "visible" : "invisible"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  // name={`${tag.value},${tag.id}`}
+                  id={tag.value}
+                  // pass the event handler prop into the onChange method on the input
+                  // the syntax to pass an inline function is: onClick={() => alert('...')}
+                  onChange={(e) => onChange(tag.value, e.target.checked)}
+                />
+                <label htmlFor={tag.value}>{tag.value}</label>
+              </div>
+            </div>
+          ))} */}
+
+        {/* {tags &&
           tags.map((tag: Tag) => (
             <div
               key={tag.value}
@@ -333,7 +389,7 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
               <hr />
               <p>{tag.visible.toString()}</p>
             </div>
-          ))}
+          ))} */}
       </ul>
     </div>
   );
@@ -351,3 +407,37 @@ function VideoList({ videos }) {
     </div>
   );
 }
+
+// function TagsList({ tags, onChange }) {
+//   return (
+//     <>
+//       {tags &&
+//         tags.map((tag: Tag) => (
+//           // console.log(tag.value, tag.visible);
+
+//           <div key={tag.value}>
+//             <p>{tag.visible.toString()}</p>
+//             <p>{tag.value}</p>
+//           </div>
+
+//           // <div key={tag.value}>
+//           //   <div
+//           //     className={`flex ${
+//           //       tag.visible === true ? "visible" : "none"
+//           //     }`}
+//           //   >
+//           //     <input
+//           //       type="checkbox"
+//           //       // name={`${tag.value},${tag.id}`}
+//           //       id={tag.value}
+//           //       // pass the event handler prop into the onChange method on the input
+//           //       // the syntax to pass an inline function is: onClick={() => alert('...')}
+//           //       onChange={(e) => onChange(tag.value, e.target.checked)}
+//           //     />
+//           //     <label htmlFor={tag.value}>{tag.value}</label>
+//           //   </div>
+//           // </div>
+//         ))}
+//     </>
+//   );
+// }
