@@ -66,12 +66,7 @@ export default function Filter(videos: Video[]) {
     return getInitialTags(videos);
   });
 
-  // console.log(videos);
   const filteredVideos = filterVideos(videos, tags);
-  // const filteredTags = filterTags(query, tags);
-  // console.log(filteredTags);
-
-  // MANAGING TAGS ------------------------------------------------------
 
   // This function creates the initial list of tags that exist on the videos array passed into
   function getInitialTags(videos) {
@@ -133,49 +128,7 @@ export default function Filter(videos: Video[]) {
   // this event handler updates the tags state array - the visible property
   function handleUpdateTagVisible(query: string) {
     query = query.toLowerCase();
-    // console.log(query, typeof query, query === "");
 
-    // If query is an empty string, reset tag.visible to false for all tags
-    // if (query === "") {
-    //   setTags(
-    //     tags.map((tag) => {
-    //       return { ...tag, visible: false };
-    //     })
-    //   );
-    // } else {
-    // const tagsToUpdate = tags.filter(
-    //   (tag) =>
-    //     tag.value
-    //       .split(" ") // divides tag.value into an ordered list of substrings; e.g. "one two three" -> ["one","two","three"]
-    //       // .some((word) => word.toLowerCase().startsWith(query))
-    //       .some((word) => word.toLowerCase().includes(query))
-    //   // check the array of substrings for a "word" that contains the query
-    // );
-
-    // console.log("tagsToUpdate", tagsToUpdate);
-
-    // return tagsToUpdate.map((tagToUpdate) => {
-    //   if (tags.some((tag) => tag.value === tagToUpdate.value)) {
-    //     // console.log(
-    //     //   tags,
-    //     //   value,
-    //     //   tags.some((e) => e.value === value)
-    //     // );
-    //     setTags(
-    //       tags.map((tag) => {
-    //         // console.log("updating" + tag);
-    //         if (tag.value === tagToUpdate.value) {
-    //           // Create a *new* object with changes
-    //           return { ...tag, visible: true };
-    //         }
-    //         // No changes
-    //         return tag;
-    //       })
-    //     );
-    //   }
-    // });
-
-    // V2
     // call setTags, map through all tags and compare value to query, set visible true
 
     setTags(
@@ -188,102 +141,6 @@ export default function Filter(videos: Video[]) {
         return { ...tag, visible: false };
       })
     );
-
-    // console.log(tagsToUpdate);
-    // console.log(tags.filter((tag) => tag.visible === true));
-
-    // const x = tagsToUpdate.map((tagToUpdate) => {
-    //   tags.some((t) => {
-    //     if (t.value === tagToUpdate.value) {
-    //       setTags(
-    //         tags.map((tag) => {
-    //           return { ...tag, visible: true };
-    //         })
-    //       );
-    //     } else {
-    //       // No changes
-    //       return tag;
-    //     }
-    //   });
-    // });
-
-    //   setTags(tags.map(tag=>{
-    //     tagsToUpdate.map(t=>{
-    //       if(t.value === tag.value){
-
-    //       }
-    //     })
-    //   }))
-    // }
-
-    // the function returns an array via tags.filter
-    // the callback passed into .filter takes argument 'tag'
-    // tag.value.split divides the query string into an ordered list of substrings and places them into an array
-    // which allows us to call .some on the substring array
-    // passing a callback function which returns 'words' that are converted to lowercase
-    // and then we check if the word starts with the query value
-    // re
-
-    //   tags.filter((tag) =>
-    //   tag.value
-    //     .split(" ")
-    //     .some((word) => word.toLowerCase().startsWith(query))
-    // )
-
-    // // aproach one - build a list of tags that match query, then match to the value of any in tags and set visible to true
-
-    // update all tags in tagsToUpdate!!
-
-    // check two arrays compare two arrays (some + )
-
-    // setTags(tags.map((tag) => {}));
-
-    // return tags.map(tag=>{
-    //   if(tag.value)
-    // })
-
-    // const updateTags = tagsToUpdate.map(tagToUpdate=>
-    //   if (tags.some((tag) => tag.value !== value)) {
-    //     // console.log(
-    //     //   tags,
-    //     //   value,
-    //     //   tags.some((e) => e.value === value)
-    //     // );
-    //     setTags(
-    //       tags.map((tag) => {
-    //         if (tag.value === value) {
-    //           // Create a *new* object with changes
-    //           return { ...tag, active: true };
-    //         }
-    //         // No changes
-    //         return tag;
-    //       })
-    //     );
-    //   }
-    // )
-
-    // return updateTags
-
-    // approach two - ??
-
-    // V2 -------------------------
-    // the point of this function is to update state
-    // actually, i want to set visible:true
-    // we want to update a state array and the objects inside of it
-    // see: https://react.dev/learn/updating-arrays-in-state
-    // see: https://react.dev/learn/updating-objects-in-state
-
-    //   const updatedTags = tagsToUpdate.map(tag =>
-    //     setTags(
-    //       tags.map((tag)=>
-    //       return)
-    //     )
-    //     tag.active===true
-
-    //   return updatedTags
-    // }
-
-    // event handler sent down to the searchbar to update state value `query`
   }
 
   // This event handler function serves two purposes:
@@ -319,6 +176,18 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
   return (
     <div>
       <h1>filter</h1>
+
+      {/* 
+      search bar always visible?
+      inside a div, render:
+      1. search input
+      2. filteredTags (fix height of scrollbar)
+      
+         function classNames(...classes) {
+          return classes.filter(Boolean).join(' ')
+        }
+
+      */}
 
       {/* search bar - onchange, set query in state, use query to return tags, render inputs so tags can be checked off */}
       <input
