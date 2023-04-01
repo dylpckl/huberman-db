@@ -175,8 +175,6 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
 
   return (
     <div>
-      <h1>filter</h1>
-
       {/* 
       search bar always visible?
       inside a div, render:
@@ -197,14 +195,14 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
         onChange={searchOnChange}
       />
 
-      <ul>
-        {/* <TagsList
+      {/* <TagsList
           tags={tags}
           onChange={onChange}
         /> */}
 
-        {tags &&
-          tags
+      {tags.length > 0 && (
+        <div className="mt-1 max-h-60 w-full overflow-auto">
+          {tags
             .filter((tag: Tag) => tag.visible === true)
             .map((filteredTag: Tag) => {
               return (
@@ -229,50 +227,48 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
                 </div>
               );
             })}
+        </div>
+      )}
 
-        {/* {tags &&
-          tags.map((tag: Tag) => (
-            // console.log(tag.value, tag.visible);
-
-            <div key={tag.value}>
-              <div
-                className={`flex ${
-                  tag.visible === true ? "visible" : "invisible"
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  // name={`${tag.value},${tag.id}`}
-                  id={tag.value}
-                  // pass the event handler prop into the onChange method on the input
-                  // the syntax to pass an inline function is: onClick={() => alert('...')}
-                  onChange={(e) => onChange(tag.value, e.target.checked)}
-                />
-                <label htmlFor={tag.value}>{tag.value}</label>
-              </div>
-            </div>
-          ))} */}
-
-        {/* {tags &&
-          tags.map((tag: Tag) => (
-            <div
-              key={tag.value}
-              className="flex"
-            >
-              <input
-                type="checkbox"
-                // name={`${tag.value},${tag.id}`}
-                id={tag.value}
-                // pass the event handler prop into the onChange method on the input
-                // the syntax to pass an inline function is: onClick={() => alert('...')}
-                onChange={(e) => onChange(tag.value, e.target.checked)}
-              />
-              <label htmlFor={tag.value}>{tag.active}</label>
-              <hr />
-              <p>{tag.visible.toString()}</p>
-            </div>
-          ))} */}
-      </ul>
+      {/* display active filters */}
+      <div>
+        <h1>Filters</h1>
+        {tags.length > 0 && (
+          <div>
+            {tags
+              .filter((tag: Tag) => tag.active === true)
+              .map((activeFilter: Tag) => (
+                <span
+                  key={activeFilter.value}
+                  className="m-1 inline-flex items-center rounded-full border border-gray-200 bg-white py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900"
+                >
+                  <span>{activeFilter.value}</span>
+                  <button
+                    type="button"
+                    className="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500"
+                    onClick={() => onChange(activeFilter.value, false)}
+                  >
+                    <span className="sr-only">
+                      Remove filter for {activeFilter.value}
+                    </span>
+                    <svg
+                      className="h-2 w-2"
+                      stroke="currentColor"
+                      fill="none"
+                      viewBox="0 0 8 8"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeWidth="1.5"
+                        d="M1 1l6 6m0-6L1 7"
+                      />
+                    </svg>
+                  </button>
+                </span>
+              ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
