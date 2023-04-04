@@ -5,8 +5,10 @@ import Tags from "./Tags";
 
 const url = "https://youtube.googleapis.com/youtube/v3/";
 const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
-
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
+
+// 
+// link = https://www.youtube.com/watch?v= & videoId
 
 // const fetcher = async (videoId: string) => {
 //   const res = fetch(
