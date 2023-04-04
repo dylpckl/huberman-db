@@ -1,6 +1,7 @@
 "use client";
 import { Fragment, useState, useEffect } from "react";
 import VideoClient from "./VideoClient";
+import { filterTags } from "./lib/filterTags";
 
 // TODO - re-write TagFilter component to render the checkboxes properly as per state
 
@@ -154,6 +155,7 @@ export default function Filter(videos: Video[]) {
   return (
     <>
       <TagFilter
+        query={query}
         tags={tags}
         onChange={handleUpdateTagsActive}
         searchOnChange={handleChange}
@@ -209,11 +211,14 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
                 // console.log(tag.value, tag.visible);
 
                 <div key={filteredTag.value}>
+                  
+                  
                   <div>
                     <input
                       type="checkbox"
                       // name={`${tag.value},${tag.id}`}
                       id={filteredTag.value}
+                      checked={filteredTag.active}
                       // pass the event handler prop into the onChange method on the input
                       // the syntax to pass an inline function is: onClick={() => alert('...')}
                       onChange={(e) =>
@@ -224,6 +229,8 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
                       {filteredTag.value}
                     </label>
                   </div>
+
+                  
                 </div>
               );
             })}

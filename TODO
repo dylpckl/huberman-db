@@ -1,4 +1,6 @@
-
 Todo:
-  ☐ highlight query characters in tag
   ☐ display active tags
+    ☐ highlight query characters in tag
+    ✔ clicking X on active tag needs to reset the inputs `checked` state @done(23-04-01 17:16)
+  ☐ video card
+    ☐ 

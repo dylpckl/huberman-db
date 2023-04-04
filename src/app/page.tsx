@@ -28,9 +28,9 @@ async function getPlaylistItems(playlistId: string, pageToken?: string) {
 
 async function getPlaylistItems2(playlistId: string, pageToken?: string) {
   const requestUrl = pageToken
-    ? `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=10` +
+    ? `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50` +
       `&pageToken=${pageToken}`
-    : `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=10`;
+    : `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50`;
   // console.log(requestUrl);
   const response = await fetch(requestUrl);
   const data = await response.json();
@@ -97,7 +97,7 @@ export default async function Home() {
   // console.log(videos.length);
 
   return (
-    <main className="flex flex-col gap-4">
+    <main className="min-h-full h-screen flex flex-col gap-4 bg-gradient-to-t from-indigo-900 via-sky-500 via-30% to-yellow-100">
       <Filter videos={videos} />
       <div className="text-zinc-200 grid grid-cols-4 gap-4">
         {/* {playlistItems.items.map((item) => (
