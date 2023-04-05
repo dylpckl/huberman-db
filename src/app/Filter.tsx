@@ -328,7 +328,7 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
 // VideoList component that accepts the result of filterVideos()
 function VideoList({ videos }) {
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
       {/* {videos && videos.map((video: Video) => <p>{video.items[0].id}</p>)} */}
       {videos &&
         videos.map((video: Video) => (
