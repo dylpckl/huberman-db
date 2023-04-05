@@ -1,32 +1,18 @@
 import Filter from "./Filter";
 import Video from "./Video";
+import { supabase } from "@/lib/supabaseClient";
 
 const CHANNEL_ID = "UC2D2CMWXMOVWx7giW1n3LIg";
 const UPLOADS_PLAYLIST_ID = "UU2D2CMWXMOVWx7giW1n3LIg";
 const url = "https://youtube.googleapis.com/youtube/v3/";
 const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 
-// async function getUploadsPlayistId() {
-//   const res = await fetch(
-//     `${url}channels?part=contentDetails&id=${CHANNEL_ID}&key=${apiKey}`
-//   );
-//   return res.json();
-// }
+// 1. Get all videos and add them to db if they don't exist
+//    - getPlaylistItems returns a list of videoId's
+//    - getVideoDetails gets the details of each videoId
 
 // recursively execute until all videos are retrieved
 async function getPlaylistItems(playlistId: string, pageToken?: string) {
-  const request =
-    `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50` +
-    `&pageToken=${pageToken}`;
-
-  const res = await fetch(
-    `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50`
-  );
-
-  return res.json();
-}
-
-async function getPlaylistItems2(playlistId: string, pageToken?: string) {
   const requestUrl = pageToken
     ? `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50` +
       `&pageToken=${pageToken}`
@@ -34,10 +20,26 @@ async function getPlaylistItems2(playlistId: string, pageToken?: string) {
   // console.log(requestUrl);
   const response = await fetch(requestUrl);
   const data = await response.json();
-  // // console.log(data);
+
+  const { videosFromDb, error } = await supabase.from("videos").select("id");
+
+  // returns an object with nested array 'items'
+  // if item.contentDetails.videoId is not in the db, add a record with id
+  // 1. map over items array
+  // 2. use .some() to check videosFromDb array for records where id matches
+  // 3. if there is no match, create a new record in the db
+  const addToDb = data.items.map(async (item) => {
+    if (!videosFromDb.some((v) => v.id === item.contentDetails.videoId)) {
+      const { error } = await supabase
+        .from("videos")
+        .insert({ id: item.contentDetails.videoId });
+    }
+  });
+  addToDb();
+  
   if (response.ok) {
     if (data.nextPageToken) {
-      const nextPageData = await getPlaylistItems2(
+      const nextPageData = await getPlaylistItems(
         playlistId,
         data.nextPageToken
       );
@@ -51,17 +53,12 @@ async function getPlaylistItems2(playlistId: string, pageToken?: string) {
   }
   // console.log(data.length);
   // return data;
-  // throw new Error(`Failed to fetch data from ${url}`);
 }
 
-// async function getVideoDetails(videoId: string) {
-//   const res = await fetch(
-//     `${url}videos?part=contentDetails,snippet,statistics&id=${videoId}&key=${apiKey}`
-//   );
-//   return res.json();
-// }
+async function getVideoDetails(obj) {
+  // if video details exist in db, pull from there
+  // otherwise, pull from api and add to db
 
-async function fetchItems(obj) {
   // console.log("obj", obj);
   const videos: Video[] = [];
   for (const item of obj.items) {
@@ -90,10 +87,10 @@ export default async function Home() {
   //   uploadsPlaylistObj.items[0].contentDetails.relatedPlaylists.uploads;
   // console.log(uploadsPlaylistId);
   // const playlistItems = await getPlaylistItems(UPLOADS_PLAYLIST_ID);
-  const playlistItems = await getPlaylistItems2(UPLOADS_PLAYLIST_ID);
+  const playlistItems = await getPlaylistItems(UPLOADS_PLAYLIST_ID);
   // console.log(playlistItems);
 
-  const videos = await fetchItems(playlistItems);
+  const videos = await getVideoDetails(playlistItems);
   // console.log(videos.length);
 
   return (
@@ -101,15 +98,6 @@ export default async function Home() {
       <div className="container mx-auto sm:px-6 lg:px-8 mt-8">
         <Filter videos={videos} />
       </div>
-
-      {/* <div className="text-zinc-200 grid grid-cols-4 gap-4">
-        {playlistItems.items.map((item) => (
-          <>
-            @ts-expect-error Async Server Component
-            <Video videoId={item.contentDetails.videoId} />
-          </>
-        ))}
-      </div> */}
     </main>
   );
 }
