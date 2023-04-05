@@ -36,7 +36,7 @@ async function getPlaylistItems(playlistId: string, pageToken?: string) {
     }
   });
   addToDb();
-  
+
   if (response.ok) {
     if (data.nextPageToken) {
       const nextPageData = await getPlaylistItems(
@@ -56,28 +56,34 @@ async function getPlaylistItems(playlistId: string, pageToken?: string) {
 }
 
 async function getVideoDetails(obj) {
-  // if video details exist in db, pull from there
-  // otherwise, pull from api and add to db
+  const videos: Video[] = [];
+
+  const { videosFromDb, error } = await supabase.from("videos").select();
 
   // console.log("obj", obj);
-  const videos: Video[] = [];
+
   for (const item of obj.items) {
-    const response = await fetch(
-      `${url}videos?part=contentDetails,snippet,statistics&id=${item.contentDetails.videoId}&key=${apiKey}`
-    );
-    const data = await response.json();
-    // console.log(data)
-    videos.push(data);
+    // if video details exist in db, pull from there
+    if (videosFromDb.some((v) => v.id === item.contentDetails.videoId)) {
+      // videos.push(stuff from supabase)
+    } else {
+      // otherwise, pull from api and add to db
+      const response = await fetch(
+        `${url}videos?part=contentDetails,snippet,statistics&id=${item.contentDetails.videoId}&key=${apiKey}`
+      );
+      const data = await response.json();
+      // console.log(data)
+      videos.push(data);
+    }
+
+    // const response = await fetch(
+    //   `${url}videos?part=contentDetails,snippet,statistics&id=${item.contentDetails.videoId}&key=${apiKey}`
+    // );
+    // const data = await response.json();
+    // // console.log(data)
+    // videos.push(data);
   }
-  // const res = await Promise.all(
-  //   obj.items.map(async (item) => {
-  //     const res = await fetch(
-  //       `${url}videos?part=contentDetails,snippet,statistics&id=${item.contentDetails.id}&key=${apiKey}`
-  //     );
-  //     const data = await res.json();
-  //     videos.push(data);
-  //   })
-  // );
+
   return videos;
 }
 
