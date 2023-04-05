@@ -160,7 +160,7 @@ export default function Filter(videos: Video[]) {
         onChange={handleUpdateTagsActive}
         searchOnChange={handleChange}
       />
-      <hr />
+      {/* <hr /> */}
       <VideoList videos={filteredVideos} />
     </>
   );
@@ -190,56 +190,101 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
       */}
 
       {/* search bar - onchange, set query in state, use query to return tags, render inputs so tags can be checked off */}
-      <input
+      {/* <input
         type="text"
         placeholder="search a tag"
         value={query}
         onChange={searchOnChange}
-      />
+      /> */}
+      <div className="">
+        <div className="relative mt-2 rounded-md shadow-sm">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 ">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              />
+            </svg>
+          </div>
+          <input
+            value={query}
+            onChange={searchOnChange}
+            type="email"
+            name="email"
+            id="email"
+            className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            placeholder="Search for a topic..."
+          />
+        </div>
 
-      {/* <TagsList
-          tags={tags}
-          onChange={onChange}
-        /> */}
-
-      {tags.length > 0 && (
-        <div className="mt-1 max-h-60 w-full overflow-auto">
-          {tags
-            .filter((tag: Tag) => tag.visible === true)
-            .map((filteredTag: Tag) => {
-              return (
-                // console.log(tag.value, tag.visible);
-
-                <div key={filteredTag.value}>
-                  
-                  
-                  <div>
-                    <input
-                      type="checkbox"
-                      // name={`${tag.value},${tag.id}`}
-                      id={filteredTag.value}
-                      checked={filteredTag.active}
-                      // pass the event handler prop into the onChange method on the input
-                      // the syntax to pass an inline function is: onClick={() => alert('...')}
-                      onChange={(e) =>
-                        onChange(filteredTag.value, e.target.checked)
-                      }
-                    />
-                    <label htmlFor={filteredTag.value}>
-                      {filteredTag.value}
-                    </label>
+        {/* Checkboxes */}
+        {tags.length > 0 && (
+          <div className="mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            {tags
+              .filter((tag: Tag) => tag.visible === true)
+              .map((filteredTag: Tag) => {
+                return (
+                  <div
+                    key={filteredTag.value}
+                    className="flex items-start"
+                  >
+                    <div className="flex h-6 items-center">
+                      <input
+                        id={filteredTag.value}
+                        aria-describedby="comments-description"
+                        name="comments"
+                        type="checkbox"
+                        checked={filteredTag.active}
+                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        onChange={(e) =>
+                          onChange(filteredTag.value, e.target.checked)
+                        }
+                      />
+                    </div>
+                    <div className="ml-3 text-sm leading-6">
+                      <label
+                        htmlFor={filteredTag.value}
+                        className="font-medium text-zinc-900"
+                      >
+                        {filteredTag.value}
+                      </label>
+                    </div>
                   </div>
 
-                  
-                </div>
-              );
-            })}
-        </div>
-      )}
+                  // <div key={filteredTag.value}>
+                  //   <div>
+                  //     <input
+                  //       type="checkbox"
+                  //       // name={`${tag.value},${tag.id}`}
+                  //       id={filteredTag.value}
+                  //       checked={filteredTag.active}
+                  //       // pass the event handler prop into the onChange method on the input
+                  //       // the syntax to pass an inline function is: onClick={() => alert('...')}
+                  //       onChange={(e) =>
+                  //         onChange(filteredTag.value, e.target.checked)
+                  //       }
+                  //     />
+                  //     <label htmlFor={filteredTag.value}>
+                  //       {filteredTag.value}
+                  //     </label>
+                  //   </div>
+                  // </div>
+                );
+              })}
+          </div>
+        )}
+      </div>
 
       {/* display active filters */}
       <div>
-        <h1>Filters</h1>
         {tags.length > 0 && (
           <div>
             {tags

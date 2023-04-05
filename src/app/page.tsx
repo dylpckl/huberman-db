@@ -97,16 +97,19 @@ export default async function Home() {
   // console.log(videos.length);
 
   return (
-    <main className="min-h-full h-screen flex flex-col gap-4 bg-gradient-to-t from-indigo-900 via-sky-500 via-30% to-yellow-100">
-      <Filter videos={videos} />
-      <div className="text-zinc-200 grid grid-cols-4 gap-4">
-        {/* {playlistItems.items.map((item) => (
+    <main className="min-h-full h-screen flex flex-col gap-4 bg-gradient-to-t from-yellow-100 from-5% via-sky-500 via-70% to-indigo-900">
+      <div className="container mx-auto sm:px-6 lg:px-8 mt-8">
+        <Filter videos={videos} />
+      </div>
+
+      {/* <div className="text-zinc-200 grid grid-cols-4 gap-4">
+        {playlistItems.items.map((item) => (
           <>
             @ts-expect-error Async Server Component
             <Video videoId={item.contentDetails.videoId} />
           </>
-        ))} */}
-      </div>
+        ))}
+      </div> */}
     </main>
   );
 }
