@@ -31,7 +31,7 @@ const excludeTags = [
 
 // This function filters the array of videos, only returning those with currently active tags
 function filterVideos(videos: Video[], tags: Tag[]): Video[] {
-  // console.log(videos, tags);
+  console.log(videos, tags);
   // 1. use filter() method on the videos array to return a new array videos
   // 2. use some() on video.items[0].snippet.tags to see if at least one element in the array
   //      passes the test in the provided function
@@ -40,16 +40,20 @@ function filterVideos(videos: Video[], tags: Tag[]): Video[] {
   //      tag.value === t from video.items[0].snippet.tags
   //      and where tag.active === true (checked)
   // console.log(tags);
-  const result = videos.videos.filter((video: Video) =>
-    video.items[0].snippet.tags.some((t) =>
-      tags.some((tag) => tag.value === t && tag.active === true)
-    )
+  const result = videos.videos.filter(
+    (video: Video) =>
+      // video.items[0].snippet.tags.some((t) =>
+      video.tags &&
+      video.tags.some((t) =>
+        tags.some((tag) => tag.value === t && tag.active === true)
+      )
   );
 
   // console.log(
   //   result.map((r) => r.items[0].snippet.tags),
   //   tags
   // );
+  console.log(result);
   return result;
 }
 
@@ -58,6 +62,8 @@ function filterVideos(videos: Video[], tags: Tag[]): Video[] {
 // ----------------------------------------------------------------------------------------
 
 export default function Filter(videos: Video[]) {
+  console.log(videos);
+  const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [tags, setTags] = useState<Tag[]>(() => {
     // const initialState = getInitialTags(videos);
@@ -73,13 +79,14 @@ export default function Filter(videos: Video[]) {
   function getInitialTags(videos) {
     const tagsArr: Tag[] = [];
     const tagsToAdd = videos.videos.map((video: Video) => {
-      video.items[0].snippet.tags.map((tag) => {
-        if (!excludeTags.some((t) => t === tag.toLowerCase())) {
-          if (!tagsArr.some((t) => t.value === tag)) {
-            tagsArr.push({ value: tag, active: false, visible: false });
+      video.tags &&
+        video.tags.map((tag) => {
+          if (!excludeTags.some((t) => t === tag.toLowerCase())) {
+            if (!tagsArr.some((t) => t.value === tag)) {
+              tagsArr.push({ value: tag, active: false, visible: false });
+            }
           }
-        }
-      });
+        });
     });
     // console.log(tagsArr);
     return tagsArr;
@@ -150,6 +157,7 @@ export default function Filter(videos: Video[]) {
     setQuery(e.target.value);
     // 2. update state tags values (tag.visible === true)
     handleUpdateTagVisible(query);
+    setOpen(true);
   }
 
   return (
@@ -203,13 +211,13 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               stroke="currentColor"
-              className="w-6 h-6"
+              className="w-5 h-5"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
               />
             </svg>
@@ -226,7 +234,7 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
         </div>
 
         {/* Checkboxes */}
-        {tags.length > 0 && (
+        {open && tags.length > 0 && (
           <div className="mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             {tags
               .filter((tag: Tag) => tag.visible === true)
@@ -326,13 +334,14 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
 }
 
 // VideoList component that accepts the result of filterVideos()
-function VideoList({ videos }) {
+function VideoList(videos) {
+  console.log(videos);
   return (
     <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
       {/* {videos && videos.map((video: Video) => <p>{video.items[0].id}</p>)} */}
       {videos &&
-        videos.map((video: Video) => (
-          <VideoClient videoId={video.items[0].id} />
+        videos.videos.map((video: Video) => (
+          <VideoClient videoId={video.videoid} />
         ))}
     </div>
   );
