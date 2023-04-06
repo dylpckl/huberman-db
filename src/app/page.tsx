@@ -1,6 +1,6 @@
 import Filter from "./Filter";
 import Video from "./Video";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/app/lib/supabaseClient";
 
 const CHANNEL_ID = "UC2D2CMWXMOVWx7giW1n3LIg";
 const UPLOADS_PLAYLIST_ID = "UU2D2CMWXMOVWx7giW1n3LIg";
@@ -14,76 +14,91 @@ const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 // recursively execute until all videos are retrieved
 async function getPlaylistItems(playlistId: string, pageToken?: string) {
   const requestUrl = pageToken
-    ? `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50` +
+    ? `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=5` +
       `&pageToken=${pageToken}`
-    : `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50`;
+    : `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=5`;
   // console.log(requestUrl);
   const response = await fetch(requestUrl);
-  const data = await response.json();
+  const playlistItems = await response.json(); // returns an object with nested array 'items'
 
-  const { videosFromDb, error } = await supabase.from("videos").select("id");
+  // const { data, error } = await supabase.from("videos").select("videoid");
+  // console.log("supabase:", data);
 
-  // returns an object with nested array 'items'
   // if item.contentDetails.videoId is not in the db, add a record with id
   // 1. map over items array
   // 2. use .some() to check videosFromDb array for records where id matches
   // 3. if there is no match, create a new record in the db
-  const addToDb = data.items.map(async (item) => {
-    if (!videosFromDb.some((v) => v.id === item.contentDetails.videoId)) {
-      const { error } = await supabase
-        .from("videos")
-        .insert({ id: item.contentDetails.videoId });
-    }
-  });
-  addToDb();
+  // const addToDb = () => {
+  //   playlistItems.items.map(async (item) => {
+  //     if (!data.some((v) => v.videoid === item.contentDetails.videoId)) {
+  //       const { error } = await supabase
+  //         .from("videos")
+  //         .insert({ videoid: item.contentDetails.videoId });
+  //     }
+  //   });
+  // };
+  // addToDb();
 
   if (response.ok) {
-    if (data.nextPageToken) {
+    if (playlistItems.nextPageToken) {
       const nextPageData = await getPlaylistItems(
         playlistId,
-        data.nextPageToken
+        playlistItems.nextPageToken
       );
       return {
-        ...data,
-        items: [...data.items, ...nextPageData.items],
+        ...playlistItems,
+        items: [...playlistItems.items, ...nextPageData.items],
       };
     }
     // console.log(data.items.length);
-    return data;
+    return playlistItems;
   }
-  // console.log(data.length);
-  // return data;
 }
 
 async function getVideoDetails(obj) {
-  const videos: Video[] = [];
+  // iterate through list of videoid's
+  // if the videoid exists in supabase, read the row from supabase
+  // otherwise, call youtube api and create the row
 
-  const { videosFromDb, error } = await supabase.from("videos").select();
+  const videos: Video[] = [];
+  const { data: videosInDb, error } = await supabase.from("videos").select();
 
   // console.log("obj", obj);
 
   for (const item of obj.items) {
     // if video details exist in db, pull from there
-    if (videosFromDb.some((v) => v.id === item.contentDetails.videoId)) {
-      // videos.push(stuff from supabase)
+    if (videosInDb.some((v) => v.videoid === item.contentDetails.videoId)) {
+      // read row from supabase and push into videos[]
+      const { data: videoInDb, error } = await supabase
+        .from("videos")
+        .select()
+        .eq("videoid", item.contentDetails.videoId);
+      videos.push(videoInDb);
     } else {
       // otherwise, pull from api and add to db
       const response = await fetch(
         `${url}videos?part=contentDetails,snippet,statistics&id=${item.contentDetails.videoId}&key=${apiKey}`
       );
-      const data = await response.json();
-      // console.log(data)
-      videos.push(data);
+      const apiData = await response.json();
+      // console.log(apiData);
+
+      // create a new record in the 'videos' table
+      const { data: createdVideo, error } = await supabase
+        .from("videos")
+        .insert({
+          videoid: apiData.items[0].id,
+          title: apiData.items[0].snippet.title,
+          // description: apiData.items[0].snippet.description,
+          published_at: apiData.items[0].snippet.publishedAt,
+          thumbnail_url: apiData.items[0].snippet.thumbnails.maxres.url,
+          thumbnail_height: apiData.items[0].snippet.thumbnails.maxres.height,
+          thumbnail_width: apiData.items[0].snippet.thumbnails.maxres.width,
+        })
+        .select();
+      videos.push(createdVideo);
     }
-
-    // const response = await fetch(
-    //   `${url}videos?part=contentDetails,snippet,statistics&id=${item.contentDetails.videoId}&key=${apiKey}`
-    // );
-    // const data = await response.json();
-    // // console.log(data)
-    // videos.push(data);
   }
-
+  console.log("videos:", videos);
   return videos;
 }
 
@@ -97,12 +112,12 @@ export default async function Home() {
   // console.log(playlistItems);
 
   const videos = await getVideoDetails(playlistItems);
-  // console.log(videos.length);
+  console.log(videos.length);
 
   return (
     <main className="min-h-full h-screen flex flex-col gap-4 bg-gradient-to-t from-yellow-100 from-5% via-sky-500 via-70% to-indigo-900">
       <div className="container mx-auto sm:px-6 lg:px-8 mt-8">
-        <Filter videos={videos} />
+        {/* <Filter videos={videos} /> */}
       </div>
     </main>
   );

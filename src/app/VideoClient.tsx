@@ -7,6 +7,11 @@ const url = "https://youtube.googleapis.com/youtube/v3/";
 const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
+async function test() {
+  const { data, error } = await supabase.from("videos").select("*");
+  console.log(data);
+}
+
 //
 // link = https://www.youtube.com/watch?v= & videoId
 
