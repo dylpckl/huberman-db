@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, useRef } from "react";
 import VideoClient from "./VideoClient";
 import { filterTags } from "./lib/filterTags";
 
@@ -76,7 +76,7 @@ export default function Filter(videos: Video[]) {
   const filteredVideos = filterVideos(videos, tags);
 
   // This function creates the initial list of tags that exist on the videos array passed into
-  function getInitialTags(videos) {
+  function getInitialTags(videos: Video[]) {
     const tagsArr: Tag[] = [];
     const tagsToAdd = videos.videos.map((video: Video) => {
       video.tags &&
@@ -165,6 +165,7 @@ export default function Filter(videos: Video[]) {
       <TagFilter
         query={query}
         tags={tags}
+        open={open}
         onChange={handleUpdateTagsActive}
         searchOnChange={handleChange}
       />
@@ -180,8 +181,9 @@ export default function Filter(videos: Video[]) {
 //   1. state value 'tags'
 //   2. event handler
 //  always renders tags state array, only those with active:true
-function TagFilter({ query, tags, onChange, searchOnChange }) {
+function TagFilter({ query, tags, onChange, searchOnChange, open }) {
   // if (filteredTags === undefined) return <h1>tags loading</h1>;
+  const ref = useRef();
 
   return (
     <div>
@@ -198,12 +200,6 @@ function TagFilter({ query, tags, onChange, searchOnChange }) {
       */}
 
       {/* search bar - onchange, set query in state, use query to return tags, render inputs so tags can be checked off */}
-      {/* <input
-        type="text"
-        placeholder="search a tag"
-        value={query}
-        onChange={searchOnChange}
-      /> */}
       <div className="">
         <div className="relative mt-2 rounded-md shadow-sm">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 ">
@@ -338,11 +334,8 @@ function VideoList(videos) {
   console.log(videos);
   return (
     <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {/* {videos && videos.map((video: Video) => <p>{video.items[0].id}</p>)} */}
       {videos &&
-        videos.videos.map((video: Video) => (
-          <VideoClient videoId={video.videoid} />
-        ))}
+        videos.videos.map((video: Video) => <VideoClient video={video} />)}
     </div>
   );
 }
