@@ -11,46 +11,52 @@ const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 //    - getPlaylistItems returns a list of videoId's
 //    - getVideoDetails gets the details of each videoId
 
+interface PlaylistItems {
+  kind: string;
+  etag: string;
+  nextPageToken?: string;
+  prevPageToken?: string;
+  items: {
+    kind: string;
+    etag: string;
+    id: string;
+    contentDetails: {
+      videoId: string;
+      videoPublishedAt: string;
+    };
+  }[];
+  pageInfo: {
+    totalResults: number;
+    resultsPerPage: number;
+  };
+}
+
 // recursively execute until all videos are retrieved
-async function getPlaylistItems(playlistId: string, pageToken?: string) {
+async function getPlaylistItems(
+  playlistId: string,
+  pageToken?: string
+): Promise<PlaylistItems> {
   const requestUrl = pageToken
-    ? `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=5` +
+    ? `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50` +
       `&pageToken=${pageToken}`
-    : `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=5`;
-  // console.log(requestUrl);
-  const response = await fetch(requestUrl);
-  const playlistItems = await response.json(); // returns an object with nested array 'items'
+    : `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50`;
 
-  // const { data, error } = await supabase.from("videos").select("videoid");
-  // console.log("supabase:", data);
-
-  // if item.contentDetails.videoId is not in the db, add a record with id
-  // 1. map over items array
-  // 2. use .some() to check videosFromDb array for records where id matches
-  // 3. if there is no match, create a new record in the db
-  // const addToDb = () => {
-  //   playlistItems.items.map(async (item) => {
-  //     if (!data.some((v) => v.videoid === item.contentDetails.videoId)) {
-  //       const { error } = await supabase
-  //         .from("videos")
-  //         .insert({ videoid: item.contentDetails.videoId });
-  //     }
-  //   });
-  // };
-  // addToDb();
+  const response = await fetch(requestUrl, { cache: "no-store" });
+  const playlistItems: PlaylistItems = await response.json();
 
   if (response.ok) {
     if (playlistItems.nextPageToken) {
+      // console.log(playlistItems.nextPageToken);
       const nextPageData = await getPlaylistItems(
         playlistId,
         playlistItems.nextPageToken
       );
       return {
         ...playlistItems,
-        items: [...playlistItems.items, ...nextPageData.items],
+        items: [...playlistItems.items, ...nextPageData!.items],
       };
     }
-    // console.log(data.items.length);
+
     return playlistItems;
   }
 }
@@ -67,7 +73,8 @@ async function fetchData() {
   return data;
 }
 
-async function getVideoDetails(obj) {
+async function getVideoDetails(obj: PlaylistItems) {
+  // console.log(obj.items.some(item=>item.contentDetails.videoId==='6ZrlsVx85ek'))
   const videos: Video[] = [];
   const videosFromDb = await fetchData();
 
@@ -90,11 +97,11 @@ async function getVideoDetails(obj) {
           if (!error) videos.push(video[0]);
           // console.log(videos);
         } else {
-          console.log(
-            "videoId ",
-            item.contentDetails.videoId,
-            " not found in db, fetching from API"
-          );
+          // console.log(
+          //   "videoId ",
+          //   item.contentDetails.videoId,
+          //   " not found in db, fetching from API"
+          // );
           const response = await fetch(
             `${url}videos?part=contentDetails,snippet,statistics&id=${item.contentDetails.videoId}&key=${apiKey}`
           );
@@ -136,14 +143,13 @@ async function getVideoDetails(obj) {
 
 export default async function Home() {
   const playlistItems = await getPlaylistItems(UPLOADS_PLAYLIST_ID);
-  // console.log(playlistItems);
-  const videos2 = await getVideoDetails(playlistItems);
-  console.log(typeof videos2);
+  console.log(playlistItems.items.length);
+  const videos = await getVideoDetails(playlistItems);
 
   return (
     <main className="min-h-full h-screen flex flex-col gap-4 bg-gradient-to-t from-yellow-200 from-5% via-sky-500 via-70% to-indigo-900">
       <div className="container mx-auto sm:px-6 lg:px-8 mt-8">
-        <Filter videos={videos2} />
+        <Filter videos={videos} />
       </div>
     </main>
   );

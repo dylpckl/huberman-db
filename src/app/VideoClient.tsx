@@ -42,7 +42,7 @@ export default function VideoClient({ video }: Video) {
   // const swrKey = `${url}videos?part=contentDetails,snippet,statistics&id=${videoId}&key=${apiKey}`;
   // const { data, error } = useSWR(swrKey, fetcher);
   // const data = await test(videoId);
-  console.log(video);
+  // console.log(video);
 
   // if (error) return <div>Failed to load</div>;
   // if (!data) return <div>Loading...</div>;

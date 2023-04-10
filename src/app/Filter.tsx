@@ -2,30 +2,13 @@
 import { Fragment, useState, useEffect, useRef } from "react";
 import VideoClient from "./VideoClient";
 import { filterTags } from "./lib/filterTags";
-
-// TODO - re-write TagFilter component to render the checkboxes properly as per state
+import { excludeTags } from "@/app/lib/excludedTags";
 
 interface Tag {
   value: string;
   active: boolean;
   visible: boolean;
 }
-
-// A list of generic tags that I should never include
-const excludeTags = [
-  "andrew huberman",
-  "andrew d. huberman",
-  "dr. andrew huberman",
-  "dr andrew huberman",
-  "huberman lab",
-  "huberman podcast",
-  "science podcast",
-  "science",
-  "huberman",
-  "andrew huberman podcast",
-  "huberman lab podcast",
-  "the huberman lab podcast",
-];
 
 // HELPER FUNTIONS ---------------------------------------------------------
 
@@ -66,14 +49,8 @@ export default function Filter(videos: Video[]) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [tags, setTags] = useState<Tag[]>(() => {
-    // const initialState = getInitialTags(videos);
-    // return initialState;
-
-    // does this work?
     return getInitialTags(videos);
   });
-
-  const filteredVideos = filterVideos(videos, tags);
 
   // This function creates the initial list of tags that exist on the videos array passed into
   function getInitialTags(videos: Video[]) {
@@ -91,6 +68,8 @@ export default function Filter(videos: Video[]) {
     // console.log(tagsArr);
     return tagsArr;
   }
+
+  const filteredVideos = filterVideos(videos, tags);
 
   // EVENT HANDLERS ------------------------------------------------------
   // these are sent down to child components as props
@@ -339,37 +318,3 @@ function VideoList(videos) {
     </div>
   );
 }
-
-// function TagsList({ tags, onChange }) {
-//   return (
-//     <>
-//       {tags &&
-//         tags.map((tag: Tag) => (
-//           // console.log(tag.value, tag.visible);
-
-//           <div key={tag.value}>
-//             <p>{tag.visible.toString()}</p>
-//             <p>{tag.value}</p>
-//           </div>
-
-//           // <div key={tag.value}>
-//           //   <div
-//           //     className={`flex ${
-//           //       tag.visible === true ? "visible" : "none"
-//           //     }`}
-//           //   >
-//           //     <input
-//           //       type="checkbox"
-//           //       // name={`${tag.value},${tag.id}`}
-//           //       id={tag.value}
-//           //       // pass the event handler prop into the onChange method on the input
-//           //       // the syntax to pass an inline function is: onClick={() => alert('...')}
-//           //       onChange={(e) => onChange(tag.value, e.target.checked)}
-//           //     />
-//           //     <label htmlFor={tag.value}>{tag.value}</label>
-//           //   </div>
-//           // </div>
-//         ))}
-//     </>
-//   );
-// }
