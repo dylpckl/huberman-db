@@ -1,9 +1,9 @@
 "use client";
 import { Fragment, useState, useEffect, forwardRef, useRef } from "react";
-import VideoClient from "./VideoClient";
+import VideoGrid from "./VideoGrid";
 import { filterTags } from "./lib/filterTags";
 import { excludeTags } from "@/app/lib/excludedTags";
-
+import { AnimatePresence } from "framer-motion";
 import useOnClickOutside from "@/app/lib/useOnClickOutside";
 
 interface Tag {
@@ -144,8 +144,21 @@ export default function Filter(videos: Video[]) {
     setOpen(true);
   }
 
+  function handleDisableTags() {
+    setQuery("");
+    setTags(
+      tags.map((tag) => {
+        return { ...tag, visible: false };
+      })
+    );
+  }
+
   return (
-    <>
+    <AnimatePresence
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 15 }}
+    >
       <TagFilter
         query={query}
         tags={tags}
@@ -153,10 +166,10 @@ export default function Filter(videos: Video[]) {
         onChange={handleUpdateTagsActive}
         searchOnChange={handleChange}
         ref={ref}
+        disableTags={handleDisableTags}
       />
-      {/* <hr /> */}
-      <VideoList videos={filteredVideos} />
-    </>
+      <VideoGrid videos={filteredVideos} />
+    </AnimatePresence>
   );
 }
 
@@ -167,22 +180,10 @@ export default function Filter(videos: Video[]) {
 //   2. event handler
 //  always renders tags state array, only those with active:true
 const TagFilter = forwardRef(
-  ({ query, tags, onChange, searchOnChange, open }, ref) => {
+  ({ query, tags, onChange, searchOnChange, open, disableTags }, ref) => {
     return (
       <div>
-        {/* 
-      search bar always visible?
-      inside a div, render:
-      1. search input
-      2. filteredTags (fix height of scrollbar)
-      
-         function classNames(...classes) {
-          return classes.filter(Boolean).join(' ')
-        }
-
-      */}
-
-        {/* search bar - onchange, set query in state, use query to return tags, render inputs so tags can be checked off */}
+        {/* Search Bar - onchange, set query in state, use query to return tags, render inputs so tags can be checked off */}
         <div className="">
           <div className="relative mt-2 rounded-md shadow-sm">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 ">
@@ -201,15 +202,41 @@ const TagFilter = forwardRef(
                 />
               </svg>
             </div>
-            <input
-              value={query}
-              onChange={searchOnChange}
-              type="email"
-              name="email"
-              id="email"
-              className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Search for a topic..."
-            />
+            <div>
+              <input
+                value={query}
+                onChange={searchOnChange}
+                type="email"
+                name="email"
+                id="email"
+                className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                placeholder="Search for a topic..."
+              />
+              <button
+                className="absolute inset-y-0 right-0 flex items-center pr-3"
+                onClick={disableTags}
+              >
+                <div
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
           </div>
 
           {/* Checkboxes */}
@@ -254,7 +281,7 @@ const TagFilter = forwardRef(
           )}
         </div>
 
-        {/* display active filters */}
+        {/* Active Filters */}
         <div>
           {tags.length > 0 && (
             <div>
@@ -296,14 +323,3 @@ const TagFilter = forwardRef(
     );
   }
 );
-
-// VideoList component that accepts the result of filterVideos()
-function VideoList(videos) {
-  console.log(videos);
-  return (
-    <div className="grid md:grid-cols-3 xl:grid-cols-4 gap-4">
-      {videos &&
-        videos.videos.map((video: Video) => <VideoClient video={video} />)}
-    </div>
-  );
-}
