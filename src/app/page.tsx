@@ -1,115 +1,156 @@
 import Filter from "./Filter";
 import Video from "./Video";
+import { supabase } from "@/app/lib/supabaseClient";
 
 const CHANNEL_ID = "UC2D2CMWXMOVWx7giW1n3LIg";
 const UPLOADS_PLAYLIST_ID = "UU2D2CMWXMOVWx7giW1n3LIg";
 const url = "https://youtube.googleapis.com/youtube/v3/";
 const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 
-// async function getUploadsPlayistId() {
-//   const res = await fetch(
-//     `${url}channels?part=contentDetails&id=${CHANNEL_ID}&key=${apiKey}`
-//   );
-//   return res.json();
-// }
+// 1. Get all videos and add them to db if they don't exist
+//    - getPlaylistItems returns a list of videoId's
+//    - getVideoDetails gets the details of each videoId
 
-// recursively execute until all videos are retrieved
-async function getPlaylistItems(playlistId: string, pageToken?: string) {
-  const request =
-    `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50` +
-    `&pageToken=${pageToken}`;
-
-  const res = await fetch(
-    `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50`
-  );
-
-  return res.json();
+interface PlaylistItems {
+  kind: string;
+  etag: string;
+  nextPageToken?: string;
+  prevPageToken?: string;
+  items: {
+    kind: string;
+    etag: string;
+    id: string;
+    contentDetails: {
+      videoId: string;
+      videoPublishedAt: string;
+    };
+  }[];
+  pageInfo: {
+    totalResults: number;
+    resultsPerPage: number;
+  };
 }
 
-async function getPlaylistItems2(playlistId: string, pageToken?: string) {
+// recursively execute until all videos are retrieved
+async function getPlaylistItems(
+  playlistId: string,
+  pageToken?: string
+): Promise<PlaylistItems> {
   const requestUrl = pageToken
     ? `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50` +
       `&pageToken=${pageToken}`
     : `${url}playlistItems?part=contentDetails&playlistId=${playlistId}&key=${apiKey}&maxResults=50`;
-  // console.log(requestUrl);
-  const response = await fetch(requestUrl);
-  const data = await response.json();
-  // // console.log(data);
+
+  const response = await fetch(requestUrl, { cache: "no-store" });
+  const playlistItems: PlaylistItems = await response.json();
+
   if (response.ok) {
-    if (data.nextPageToken) {
-      const nextPageData = await getPlaylistItems2(
+    if (playlistItems.nextPageToken) {
+      // console.log(playlistItems.nextPageToken);
+      const nextPageData = await getPlaylistItems(
         playlistId,
-        data.nextPageToken
+        playlistItems.nextPageToken
       );
       return {
-        ...data,
-        items: [...data.items, ...nextPageData.items],
+        ...playlistItems,
+        items: [...playlistItems.items, ...nextPageData!.items],
       };
     }
-    // console.log(data.items.length);
-    return data;
+
+    return playlistItems;
   }
-  // console.log(data.length);
-  // return data;
-  // throw new Error(`Failed to fetch data from ${url}`);
 }
 
-// async function getVideoDetails(videoId: string) {
-//   const res = await fetch(
-//     `${url}videos?part=contentDetails,snippet,statistics&id=${videoId}&key=${apiKey}`
-//   );
-//   return res.json();
-// }
+async function fetchData() {
+  const res = await fetch("http://localhost:3000/api/hello", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    cache: "no-store",
+    // next: { revalidate: 10 },
+  });
+  const data = await res.json();
+  // console.log(data);
+  return data;
+}
 
-async function fetchItems(obj) {
-  // console.log("obj", obj);
+async function getVideoDetails(obj: PlaylistItems) {
+  // console.log(obj.items.some(item=>item.contentDetails.videoId==='6ZrlsVx85ek'))
   const videos: Video[] = [];
-  for (const item of obj.items) {
-    const response = await fetch(
-      `${url}videos?part=contentDetails,snippet,statistics&id=${item.contentDetails.videoId}&key=${apiKey}`
-    );
-    const data = await response.json();
-    // console.log(data)
-    videos.push(data);
+  const videosFromDb = await fetchData();
+
+  async function seedDatabase() {
+    // console.log(videosFromDb);
+    for (const item of obj.items) {
+      // if video exists in db, fetch the record and push into array
+      // if not, add the record and push into array
+      if (videosFromDb.data) {
+        if (
+          videosFromDb.data.some(
+            (v) => v.videoid === item.contentDetails.videoId
+          )
+        ) {
+          const { data: video, error } = await supabase
+            .from("videos")
+            .select("*")
+            .eq("videoid", item.contentDetails.videoId);
+          // console.log("video found in db:", video[0]);
+          if (!error) videos.push(video[0]);
+          // console.log(videos);
+        } else {
+          // console.log(
+          //   "videoId ",
+          //   item.contentDetails.videoId,
+          //   " not found in db, fetching from API"
+          // );
+          const response = await fetch(
+            `${url}videos?part=contentDetails,snippet,statistics&id=${item.contentDetails.videoId}&key=${apiKey}`
+          );
+          const apiData = await response.json();
+          // console.log(apiData);
+
+          if (
+            !videosFromDb.data.some(
+              (v: Video) => v.videoid === apiData.items[0].id
+            )
+          ) {
+            // create a new record in the 'videos' table
+            const { data: createdVideo, error } = await supabase
+              .from("videos")
+              .insert({
+                videoid: apiData.items[0].id,
+                title: apiData.items[0].snippet.title,
+                description: apiData.items[0].snippet.description,
+                published_at: apiData.items[0].snippet.publishedAt,
+                thumbnail_url: apiData.items[0].snippet.thumbnails.maxres.url,
+                thumbnail_height:
+                  apiData.items[0].snippet.thumbnails.maxres.height,
+                thumbnail_width:
+                  apiData.items[0].snippet.thumbnails.maxres.width,
+                tags: apiData.items[0].snippet.tags,
+              })
+              .select();
+            if (!error) videos.push(createdVideo);
+          }
+        }
+      }
+      // console.log(videos);
+    }
+    return videos;
   }
-  // const res = await Promise.all(
-  //   obj.items.map(async (item) => {
-  //     const res = await fetch(
-  //       `${url}videos?part=contentDetails,snippet,statistics&id=${item.contentDetails.id}&key=${apiKey}`
-  //     );
-  //     const data = await res.json();
-  //     videos.push(data);
-  //   })
-  // );
-  return videos;
+
+  return await seedDatabase();
 }
 
 export default async function Home() {
-  // const uploadsPlaylistObj = await getUploadsPlayistId();
-  // const uploadsPlaylistId =
-  //   uploadsPlaylistObj.items[0].contentDetails.relatedPlaylists.uploads;
-  // console.log(uploadsPlaylistId);
-  // const playlistItems = await getPlaylistItems(UPLOADS_PLAYLIST_ID);
-  const playlistItems = await getPlaylistItems2(UPLOADS_PLAYLIST_ID);
-  // console.log(playlistItems);
-
-  const videos = await fetchItems(playlistItems);
-  // console.log(videos.length);
+  const playlistItems = await getPlaylistItems(UPLOADS_PLAYLIST_ID);
+  console.log(playlistItems.items.length);
+  const videos = await getVideoDetails(playlistItems);
 
   return (
-    <main className="min-h-full h-screen flex flex-col gap-4 bg-gradient-to-t from-yellow-100 from-5% via-sky-500 via-70% to-indigo-900">
+    <main className="min-h-full h-screen flex flex-col gap-4 bg-gradient-to-t from-yellow-200 from-5% via-sky-500 via-70% to-indigo-900">
       <div className="container mx-auto sm:px-6 lg:px-8 mt-8">
         <Filter videos={videos} />
       </div>
-
-      {/* <div className="text-zinc-200 grid grid-cols-4 gap-4">
-        {playlistItems.items.map((item) => (
-          <>
-            @ts-expect-error Async Server Component
-            <Video videoId={item.contentDetails.videoId} />
-          </>
-        ))}
-      </div> */}
     </main>
   );
 }
