@@ -182,103 +182,60 @@ export default function Filter(videos: Video[]) {
 const TagFilter = forwardRef(
   ({ query, tags, onChange, searchOnChange, open, disableTags }, ref) => {
     return (
-      <div>
-        {/* Search Bar - onchange, set query in state, use query to return tags, render inputs so tags can be checked off */}
-        <div className="">
-          <div className="relative mt-2 rounded-md shadow-sm">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 ">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                />
-              </svg>
-            </div>
-            <div>
-              <input
-                value={query}
-                onChange={searchOnChange}
-                type="email"
-                name="email"
-                id="email"
-                className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="Search for a topic..."
-              />
-              <button
-                className="absolute inset-y-0 right-0 flex items-center pr-3"
-                onClick={disableTags}
-              >
-                <div
-                  className="h-5 w-5 text-gray-400"
-                  aria-hidden="true"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-              </button>
-            </div>
-          </div>
-
-          {/* Checkboxes */}
-          {open && tags.length > 0 && (
-            <div
-              className="mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-              ref={ref}
+      <div className=" bg-amber-400 relative">
+        {/* Search Bar */}
+        <div className="relative mt-2 rounded-md shadow-sm">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 ">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-5 h-5"
             >
-              {tags
-                .filter((tag: Tag) => tag.visible === true)
-                .map((filteredTag: Tag) => {
-                  return (
-                    <div
-                      key={filteredTag.value}
-                      className="flex items-start"
-                    >
-                      <div className="flex h-6 items-center">
-                        <input
-                          id={filteredTag.value}
-                          aria-describedby="comments-description"
-                          name="comments"
-                          type="checkbox"
-                          checked={filteredTag.active}
-                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                          onChange={(e) =>
-                            onChange(filteredTag.value, e.target.checked)
-                          }
-                        />
-                      </div>
-                      <div className="ml-3 text-sm leading-6">
-                        <label
-                          htmlFor={filteredTag.value}
-                          className="font-medium text-zinc-900"
-                        >
-                          {filteredTag.value}
-                        </label>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          )}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              />
+            </svg>
+          </div>
+          <div>
+            <input
+              value={query}
+              onChange={searchOnChange}
+              type="email"
+              name="email"
+              id="email"
+              className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="Search for a topic..."
+            />
+            <button
+              className="absolute inset-y-0 right-0 flex items-center pr-3"
+              onClick={disableTags}
+            >
+              <div
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
         </div>
 
         {/* Active Filters */}
@@ -319,6 +276,59 @@ const TagFilter = forwardRef(
             </div>
           )}
         </div>
+
+        {/* Checkboxes */}
+        {open && tags.length > 0 && (
+          <div
+            className="absolute z-10 bg-blue-500 flex flex-wrap gap-4 mt-1 max-h-32 w-full overflow-auto rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            ref={ref}
+          >
+            {tags
+              .filter((tag: Tag) => tag.visible === true)
+              .map((filteredTag: Tag) => {
+                return (
+                  <div
+                    key={filteredTag.value}
+                    className=""
+                  >
+                    {/* <div className="flex h-6 items-center">
+                      <input
+                        id={filteredTag.value}
+                        aria-describedby="comments-description"
+                        name="comments"
+                        type="checkbox"
+                        checked={filteredTag.active}
+                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        onChange={(e) =>
+                          onChange(filteredTag.value, e.target.checked)
+                        }
+                      />
+                    </div>
+                    <div className="ml-3 text-sm leading-6">
+                      <label
+                        htmlFor={filteredTag.value}
+                        className="font-medium text-zinc-300"
+                      >
+                        {filteredTag.value}
+                      </label>
+                    </div> */}
+
+                    <button
+                      className="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-800 hover:bg-gray-200"
+                      onClick={(e) =>
+                        onChange(filteredTag.value, !filteredTag.active)
+                      }
+                    >
+                      {filteredTag.value}
+                    </button>
+                  </div>
+                );
+              })}
+          </div>
+        )}
+
+        {/* Done */}
+        <button>Done</button>
       </div>
     );
   }
