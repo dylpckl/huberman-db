@@ -7,8 +7,8 @@ export default function getHighlightedText(text: string, highlight: string) {
     >
       {part.toLowerCase() === highlight.toLowerCase() ? (
         <span
-          className=""
-          style={{ color: "orange" }}
+          className="font-bold"
+          // style={{ color: "orange" }}
         >
           {part}
         </span>

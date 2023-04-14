@@ -14,6 +14,10 @@ import filterVideos from "./lib/filterVideos";
 // Components
 import VideoGrid from "./VideoGrid";
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
 export default function Filter(videos: Video[]) {
   console.log(videos);
   const [open, setOpen] = useState(false);
@@ -152,32 +156,29 @@ export default function Filter(videos: Video[]) {
 //   1. state value 'tags'
 //   2. event handler
 //  always renders tags state array, only those with active:true
+interface TagFilterProps {
+  query: string;
+  tags: Tag[];
+  onChange: Function;
+  searchOnChange: Function;
+  open: boolean;
+  disableTags: Function;
+  searchOnClick: Function;
+}
+
 const TagFilter = forwardRef(
   (
-    { query, tags, onChange, searchOnChange, open, disableTags, searchOnClick },
+    {
+      query,
+      tags,
+      onChange,
+      searchOnChange,
+      open,
+      disableTags,
+      searchOnClick,
+    }: TagFilterProps,
     ref
   ) => {
-    // function getHighlightedText(text, highlight) {
-    //   const parts = text.split(new RegExp(`(${highlight})`, "gi"));
-    //   return parts.map((part, index) => (
-    //     <div
-    //       className="whitespace-pre" // preserves newlines and spaces within an element. see: https://tailwindcss.com/docs/whitespace#pre
-    //       key={index}
-    //     >
-    //       {part.toLowerCase() === highlight.toLowerCase() ? (
-    //         <span
-    //           className=""
-    //           style={{ color: "orange" }}
-    //         >
-    //           {part}
-    //         </span>
-    //       ) : (
-    //         <span>{part}</span>
-    //       )}
-    //     </div>
-    //   ));
-    // }
-
     return (
       <div className=" bg-amber-400 relative">
         {/* Search Bar */}
@@ -278,7 +279,7 @@ const TagFilter = forwardRef(
         {/* Checkboxes */}
         {open && tags.length > 0 && (
           <div
-            className="absolute z-10 bg-blue-500 flex h-64 flex-wrap gap-4 mt-1 max-h-64 w-full overflow-auto rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            className="absolute z-10 bg-blue-500 flex min-h-32 flex-wrap gap-4 mt-1 max-h-64 w-full overflow-auto rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             ref={ref}
           >
             {tags
@@ -289,30 +290,13 @@ const TagFilter = forwardRef(
                     key={filteredTag.value}
                     className=""
                   >
-                    {/* <div className="flex h-6 items-center">
-                      <input
-                        id={filteredTag.value}
-                        aria-describedby="comments-description"
-                        name="comments"
-                        type="checkbox"
-                        checked={filteredTag.active}
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        onChange={(e) =>
-                          onChange(filteredTag.value, e.target.checked)
-                        }
-                      />
-                    </div>
-                    <div className="ml-3 text-sm leading-6">
-                      <label
-                        htmlFor={filteredTag.value}
-                        className="font-medium text-zinc-300"
-                      >
-                        {filteredTag.value}
-                      </label>
-                    </div> */}
-
                     <button
-                      className="flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-800 hover:bg-gray-200"
+                      className={classNames(
+                        filteredTag.active
+                          ? "border-2 border-pink-300"
+                          : "border-0",
+                        "flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-800 hover:bg-gray-200"
+                      )}
                       onClick={(e) =>
                         onChange(filteredTag.value, !filteredTag.active)
                       }
@@ -328,9 +312,6 @@ const TagFilter = forwardRef(
               })}
           </div>
         )}
-
-        {/* Done */}
-        <button>Done</button>
       </div>
     );
   }
