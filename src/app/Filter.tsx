@@ -153,6 +153,10 @@ export default function Filter(videos: Video[]) {
     );
   }
 
+  function handleOpenSearch() {
+    setOpen(true);
+  }
+
   return (
     <AnimatePresence
       initial={{ opacity: 0, y: 15 }}
@@ -167,6 +171,7 @@ export default function Filter(videos: Video[]) {
         searchOnChange={handleChange}
         ref={ref}
         disableTags={handleDisableTags}
+        searchOnClick={handleOpenSearch}
       />
       <VideoGrid videos={filteredVideos} />
     </AnimatePresence>
@@ -180,7 +185,10 @@ export default function Filter(videos: Video[]) {
 //   2. event handler
 //  always renders tags state array, only those with active:true
 const TagFilter = forwardRef(
-  ({ query, tags, onChange, searchOnChange, open, disableTags }, ref) => {
+  (
+    { query, tags, onChange, searchOnChange, open, disableTags, searchOnClick },
+    ref
+  ) => {
     return (
       <div className=" bg-amber-400 relative">
         {/* Search Bar */}
@@ -205,6 +213,7 @@ const TagFilter = forwardRef(
             <input
               value={query}
               onChange={searchOnChange}
+              onClick={searchOnClick}
               type="email"
               name="email"
               id="email"
@@ -280,7 +289,7 @@ const TagFilter = forwardRef(
         {/* Checkboxes */}
         {open && tags.length > 0 && (
           <div
-            className="absolute z-10 bg-blue-500 flex flex-wrap gap-4 mt-1 max-h-32 w-full overflow-auto rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            className="absolute z-10 bg-blue-500 flex h-64 flex-wrap gap-4 mt-1 max-h-64 w-full overflow-auto rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             ref={ref}
           >
             {tags
