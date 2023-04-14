@@ -10,6 +10,12 @@ type Video = {
   tags: string[];
 };
 
+type Tag = {
+  value: string;
+  active: boolean;
+  visible: boolean;
+};
+
 // type Video = {
 //   kind: string;
 //   etag: string;
