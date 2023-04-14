@@ -1,9 +1,9 @@
 "use client";
 import { Fragment, useState, useEffect, forwardRef, useRef } from "react";
-import VideoClient from "./VideoClient";
+import VideoGrid from "./VideoGrid";
 import { filterTags } from "./lib/filterTags";
 import { excludeTags } from "@/app/lib/excludedTags";
-
+import { AnimatePresence } from "framer-motion";
 import useOnClickOutside from "@/app/lib/useOnClickOutside";
 
 interface Tag {
@@ -144,8 +144,25 @@ export default function Filter(videos: Video[]) {
     setOpen(true);
   }
 
+  function handleDisableTags() {
+    setQuery("");
+    setTags(
+      tags.map((tag) => {
+        return { ...tag, visible: false };
+      })
+    );
+  }
+
+  function handleOpenSearch() {
+    setOpen(true);
+  }
+
   return (
-    <>
+    <AnimatePresence
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 15 }}
+    >
       <TagFilter
         query={query}
         tags={tags}
@@ -153,10 +170,11 @@ export default function Filter(videos: Video[]) {
         onChange={handleUpdateTagsActive}
         searchOnChange={handleChange}
         ref={ref}
+        disableTags={handleDisableTags}
+        searchOnClick={handleOpenSearch}
       />
-      {/* <hr /> */}
-      <VideoList videos={filteredVideos} />
-    </>
+      <VideoGrid videos={filteredVideos} />
+    </AnimatePresence>
   );
 }
 
@@ -167,94 +185,69 @@ export default function Filter(videos: Video[]) {
 //   2. event handler
 //  always renders tags state array, only those with active:true
 const TagFilter = forwardRef(
-  ({ query, tags, onChange, searchOnChange, open }, ref) => {
+  (
+    { query, tags, onChange, searchOnChange, open, disableTags, searchOnClick },
+    ref
+  ) => {
     return (
-      <div>
-        {/* 
-      search bar always visible?
-      inside a div, render:
-      1. search input
-      2. filteredTags (fix height of scrollbar)
-      
-         function classNames(...classes) {
-          return classes.filter(Boolean).join(' ')
-        }
-
-      */}
-
-        {/* search bar - onchange, set query in state, use query to return tags, render inputs so tags can be checked off */}
-        <div className="">
-          <div className="relative mt-2 rounded-md shadow-sm">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 ">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                />
-              </svg>
-            </div>
+      <div className=" bg-amber-400 relative">
+        {/* Search Bar */}
+        <div className="relative mt-2 rounded-md shadow-sm">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 ">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              />
+            </svg>
+          </div>
+          <div>
             <input
               value={query}
               onChange={searchOnChange}
+              onClick={searchOnClick}
               type="email"
               name="email"
               id="email"
               className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               placeholder="Search for a topic..."
             />
-          </div>
-
-          {/* Checkboxes */}
-          {open && tags.length > 0 && (
-            <div
-              className="mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-              ref={ref}
+            <button
+              className="absolute inset-y-0 right-0 flex items-center pr-3"
+              onClick={disableTags}
             >
-              {tags
-                .filter((tag: Tag) => tag.visible === true)
-                .map((filteredTag: Tag) => {
-                  return (
-                    <div
-                      key={filteredTag.value}
-                      className="flex items-start"
-                    >
-                      <div className="flex h-6 items-center">
-                        <input
-                          id={filteredTag.value}
-                          aria-describedby="comments-description"
-                          name="comments"
-                          type="checkbox"
-                          checked={filteredTag.active}
-                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                          onChange={(e) =>
-                            onChange(filteredTag.value, e.target.checked)
-                          }
-                        />
-                      </div>
-                      <div className="ml-3 text-sm leading-6">
-                        <label
-                          htmlFor={filteredTag.value}
-                          className="font-medium text-zinc-900"
-                        >
-                          {filteredTag.value}
-                        </label>
-                      </div>
-                    </div>
-                  );
-                })}
-            </div>
-          )}
+              <div
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </button>
+          </div>
         </div>
 
-        {/* display active filters */}
+        {/* Active Filters */}
         <div>
           {tags.length > 0 && (
             <div>
@@ -292,18 +285,60 @@ const TagFilter = forwardRef(
             </div>
           )}
         </div>
+
+        {/* Checkboxes */}
+        {open && tags.length > 0 && (
+          <div
+            className="absolute z-10 bg-blue-500 flex h-64 flex-wrap gap-4 mt-1 max-h-64 w-full overflow-auto rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            ref={ref}
+          >
+            {tags
+              .filter((tag: Tag) => tag.visible === true)
+              .map((filteredTag: Tag) => {
+                return (
+                  <div
+                    key={filteredTag.value}
+                    className=""
+                  >
+                    {/* <div className="flex h-6 items-center">
+                      <input
+                        id={filteredTag.value}
+                        aria-describedby="comments-description"
+                        name="comments"
+                        type="checkbox"
+                        checked={filteredTag.active}
+                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                        onChange={(e) =>
+                          onChange(filteredTag.value, e.target.checked)
+                        }
+                      />
+                    </div>
+                    <div className="ml-3 text-sm leading-6">
+                      <label
+                        htmlFor={filteredTag.value}
+                        className="font-medium text-zinc-300"
+                      >
+                        {filteredTag.value}
+                      </label>
+                    </div> */}
+
+                    <button
+                      className="inline-flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-800 hover:bg-gray-200"
+                      onClick={(e) =>
+                        onChange(filteredTag.value, !filteredTag.active)
+                      }
+                    >
+                      {filteredTag.value}
+                    </button>
+                  </div>
+                );
+              })}
+          </div>
+        )}
+
+        {/* Done */}
+        <button>Done</button>
       </div>
     );
   }
 );
-
-// VideoList component that accepts the result of filterVideos()
-function VideoList(videos) {
-  console.log(videos);
-  return (
-    <div className="grid md:grid-cols-3 xl:grid-cols-4 gap-4">
-      {videos &&
-        videos.videos.map((video: Video) => <VideoClient video={video} />)}
-    </div>
-  );
-}

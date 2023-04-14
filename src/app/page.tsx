@@ -1,5 +1,5 @@
 import Filter from "./Filter";
-import Video from "./Video";
+import Video from "./Video.old";
 import { supabase } from "@/app/lib/supabaseClient";
 
 const CHANNEL_ID = "UC2D2CMWXMOVWx7giW1n3LIg";
@@ -143,7 +143,7 @@ async function getVideoDetails(obj: PlaylistItems) {
 
 export default async function Home() {
   const playlistItems = await getPlaylistItems(UPLOADS_PLAYLIST_ID);
-  console.log(playlistItems.items.length);
+  // console.log(playlistItems.items.length);
   const videos = await getVideoDetails(playlistItems);
 
   return (
