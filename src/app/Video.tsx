@@ -55,7 +55,27 @@ export const Video = ({ video }: Video) => {
           </a>
         </h3>
       </div>
-      <p className="mt-1 text-sm text-gray-500 line-clamp-6">{video.description}</p>
+      <p className="mt-1 text-sm text-gray-500 line-clamp-6">
+        {video.description}
+      </p>
+
+      <div className=" flex gap-2 border-2 border-gray-400 rounded-full items-start w-1/2 p-2">
+        <button className="">Watch Video</button>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+          />
+        </svg>
+      </div>
     </motion.div>
   );
 };
