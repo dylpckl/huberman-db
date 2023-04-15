@@ -8,6 +8,14 @@ import { motion } from "framer-motion";
 export const Video = ({ video }: Video) => {
   const publishedAt = new Date(video.published_at);
 
+  const trimmedTitle = (title: string) => {
+    return title.split("|")[0];
+  };
+
+  const videoNumber = (title: string) => {
+    return title.split("#")[1];
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
@@ -33,7 +41,8 @@ export const Video = ({ video }: Video) => {
           year: "numeric",
         })}
       </p>
-
+      {/* <p>{video.title}</p> */}
+      <p>{videoNumber(video.title)}</p>
       {/* Title & Description */}
       <div className="flex items-center justify-between space-x-8 text-base font-medium text-gray-900">
         <h3>
@@ -42,11 +51,11 @@ export const Video = ({ video }: Video) => {
               aria-hidden="true"
               className=""
             />
-            {video.title}
+            {trimmedTitle(video.title)}
           </a>
         </h3>
       </div>
-      <p className="mt-1 text-sm text-gray-500 truncate">{video.description}</p>
+      <p className="mt-1 text-sm text-gray-500 line-clamp-6">{video.description}</p>
     </motion.div>
   );
 };

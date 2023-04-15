@@ -125,10 +125,6 @@ export default function Filter(videos: Video[]) {
     );
   }
 
-  function handleOpenSearch() {
-    setOpen(true);
-  }
-
   return (
     <AnimatePresence
       initial={{ opacity: 0, y: 15 }}
@@ -143,7 +139,6 @@ export default function Filter(videos: Video[]) {
         searchOnChange={handleChange}
         ref={ref}
         disableTags={handleDisableTags}
-        searchOnClick={handleOpenSearch}
       />
       <VideoGrid videos={filteredVideos} />
     </AnimatePresence>
@@ -163,7 +158,6 @@ interface TagFilterProps {
   searchOnChange: Function;
   open: boolean;
   disableTags: Function;
-  searchOnClick: Function;
 }
 
 const TagFilter = forwardRef(
@@ -175,10 +169,16 @@ const TagFilter = forwardRef(
       searchOnChange,
       open,
       disableTags,
-      searchOnClick,
     }: TagFilterProps,
     ref
   ) => {
+    const filteredTags =
+      query === ""
+        ? []
+        : tags.filter((tag) => {
+            return tag.value.toLowerCase().includes(query.toLowerCase());
+          });
+
     return (
       <div className=" bg-amber-400 relative">
         {/* Search Bar */}
@@ -203,7 +203,6 @@ const TagFilter = forwardRef(
             <input
               value={query}
               onChange={searchOnChange}
-              onClick={searchOnClick}
               type="email"
               name="email"
               id="email"
@@ -222,13 +221,13 @@ const TagFilter = forwardRef(
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                   className="w-6 h-6"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
@@ -276,40 +275,44 @@ const TagFilter = forwardRef(
           )}
         </div>
 
-        {/* Checkboxes */}
-        {open && tags.length > 0 && (
+        {/* Search Modal */}
+        {open && (
           <div
-            className="absolute z-10 bg-blue-500 flex min-h-32 flex-wrap gap-4 mt-1 max-h-64 w-full overflow-auto rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+            className="absolute z-10 bg-blue-500 flex flex-wrap gap-4 mt-1 max-h-72 w-full overflow-y-auto scroll-py-2 rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             ref={ref}
           >
-            {tags
-              .filter((tag: Tag) => tag.visible === true)
-              .map((filteredTag: Tag) => {
-                return (
+            {filteredTags.length > 0 && (
+              <div>
+                {filteredTags.map((tag, index) => (
                   <div
-                    key={filteredTag.value}
+                    key={index}
                     className=""
                   >
                     <button
                       className={classNames(
-                        filteredTag.active
-                          ? "border-2 border-pink-300"
-                          : "border-0",
+                        tag.active ? "border-2 border-pink-300" : "border-0",
                         "flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-800 hover:bg-gray-200"
                       )}
-                      onClick={(e) =>
-                        onChange(filteredTag.value, !filteredTag.active)
-                      }
+                      onClick={(e) => onChange(tag.value, !tag.active)}
                     >
                       {
                         <div className="flex">
-                          {getHighlightedText(filteredTag.value, query)}
+                          {getHighlightedText(tag.value, query)}
                         </div>
                       }
                     </button>
                   </div>
-                );
-              })}
+                ))}
+              </div>
+            )}
+
+            {query !== "" && filteredTags.length === 0 && (
+              <div className="px-4 py-14 text-center sm:px-14">
+                <p className="mt-4 text-sm text-gray-900">
+                  No people found using that search term.
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>
