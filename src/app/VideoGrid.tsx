@@ -24,7 +24,13 @@ export default function VideoGrid(videos) {
         exit={{ opacity: 0, y: 15 }}
         variants={variants}
       >
-        {videos && videos.videos.map((video: Video) => <Video video={video} />)}
+        {videos &&
+          videos.videos.map((video: Video) => (
+            <Video
+              video={video}
+              key={video.videoid}
+            />
+          ))}
       </motion.div>
     </AnimatePresence>
   );
