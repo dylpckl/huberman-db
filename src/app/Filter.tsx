@@ -2,11 +2,12 @@
 
 // External libraries
 import { Fragment, useState, useEffect, forwardRef, useRef } from "react";
-import { AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Helper functions
 import { excludeTags } from "@/app/lib/excludedTags";
 import useOnClickOutside from "@/app/lib/useOnClickOutside";
+import useScrollToTop from "@/app/lib/useScrollToTop";
 import getHighlightedText from "./lib/getHighlightedText";
 import { filterTags } from "./lib/filterTags";
 import filterVideos from "./lib/filterVideos";
@@ -19,7 +20,9 @@ function classNames(...classes) {
 }
 
 export default function Filter(videos: Video[]) {
-  console.log(videos);
+  const ref = useRef();
+  // const scrollRef = useRef();
+  // const [isScrollBtnVisible, scrollToTop] = useScrollToTop(scrollRef, 50);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [tags, setTags] = useState<Tag[]>(() => {
@@ -43,7 +46,6 @@ export default function Filter(videos: Video[]) {
     return tagsArr;
   }
 
-  const ref = useRef();
   useOnClickOutside(ref, () => setOpen(false));
 
   const filteredVideos = filterVideos(videos, tags);
@@ -132,7 +134,10 @@ export default function Filter(videos: Video[]) {
       })
     );
   }
-
+  function handleOpenSearchModal() {
+    console.log("fire");
+    setOpen(true);
+  }
   return (
     <AnimatePresence
       initial={{ opacity: 0, y: 15 }}
@@ -148,6 +153,7 @@ export default function Filter(videos: Video[]) {
         ref={ref}
         disableTags={handleDisableTags}
         handleClearActiveTags={handleClearActiveTags}
+        openSearchModal={handleOpenSearchModal}
       />
       <VideoGrid videos={filteredVideos} />
     </AnimatePresence>
@@ -168,6 +174,7 @@ interface TagFilterProps {
   open: boolean;
   disableTags: Function;
   handleClearActiveTags: Function;
+  openSearchModal: Function;
 }
 
 const TagFilter = forwardRef(
@@ -180,6 +187,7 @@ const TagFilter = forwardRef(
       open,
       disableTags,
       handleClearActiveTags,
+      openSearchModal,
     }: TagFilterProps,
     ref
   ) => {
@@ -191,7 +199,10 @@ const TagFilter = forwardRef(
           });
 
     return (
-      <div className="relative mx-auto max-w-2xl">
+      <div
+        className="relative mx-auto max-w-2xl"
+        // ref={scrollRef}
+      >
         {/* Search Bar */}
         <div className="relative mt-2 rounded-md shadow-sm ">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 ">
@@ -214,6 +225,7 @@ const TagFilter = forwardRef(
             <input
               value={query}
               onChange={searchOnChange}
+              onClick={openSearchModal}
               type="email"
               name="email"
               id="email"
@@ -268,7 +280,7 @@ const TagFilter = forwardRef(
               </svg>
             </button>
 
-            <div className="flex flex-wrap gap-2 my-2">
+            <div className="flex flex-wrap gap-1 my-2">
               {tags
                 .filter((tag: Tag) => tag.active === true)
                 .map((activeFilter: Tag) => (
@@ -291,44 +303,44 @@ const TagFilter = forwardRef(
         {/* Search Modal */}
         {open && (
           <div className="overflow-hidden">
-          <ul
-            className="absolute z-10 bg-blue-500 flex flex-col max-h-60 w-full overflow-x-hidden overflow-y-auto scroll-py-2 rounded-b-lg py-1 text-base shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
-            ref={ref}
-          >
-            {filteredTags.length > 0 && (
-              <>
-                {filteredTags.map((tag, index) => (
-                  <li
-                    onClick={(e) => onChange(tag.value, !tag.active)}
-                    key={index}
-                    className="relative flex items-start cursor-default select-none gap-2 py-2 px-4 w-full group hover:bg-black"
-                  >
-                    <span
-                      className={classNames(
-                        !tag.active
-                          ? "invisible"
-                          : "text-xs group-hover:text-white"
-                      )}
+            <ul
+              className="absolute z-10 bg-blue-500 flex flex-col max-h-60 w-full overflow-x-hidden overflow-y-auto scroll-py-2 rounded-b-lg py-1 text-base shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+              ref={ref}
+            >
+              {filteredTags.length > 0 && (
+                <>
+                  {filteredTags.map((tag, index) => (
+                    <li
+                      onClick={(e) => onChange(tag.value, !tag.active)}
+                      key={index}
+                      className="relative flex items-start cursor-default select-none gap-2 py-2 px-4 w-full group hover:bg-black"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="w-4 h-4"
+                      <span
+                        className={classNames(
+                          !tag.active
+                            ? "invisible"
+                            : "text-xs group-hover:text-white"
+                        )}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M4.5 12.75l6 6 9-13.5"
-                        />
-                      </svg>
-                    </span>
-                    <span className="flex truncate group-hover:text-white">
-                      {getHighlightedText(tag.value, query)}
-                    </span>
-                    {/* <button
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-4 h-4"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4.5 12.75l6 6 9-13.5"
+                          />
+                        </svg>
+                      </span>
+                      <span className="flex truncate group-hover:text-white">
+                        {getHighlightedText(tag.value, query)}
+                      </span>
+                      {/* <button
                       className="flex items-center rounded-md px-2.5 py-0.5 text-sm font-medium text-gray-800 hover:bg-gray-200"
                       // className={classNames(
                       //   tag.active ? "border-2 border-pink-300" : "border-0",
@@ -342,21 +354,43 @@ const TagFilter = forwardRef(
                         </div>
                       }
                     </button> */}
-                  </li>
-                ))}
-              </>
-            )}
+                    </li>
+                  ))}
+                </>
+              )}
 
-            {query !== "" && filteredTags.length === 0 && (
-              <div className="px-4 py-14 text-center sm:px-14">
-                <p className="mt-4 text-sm text-gray-900">
-                  No people found using that search term.
-                </p>
-              </div>
-            )}
-          </ul>
+              {query !== "" && filteredTags.length === 0 && (
+                <div className="px-4 py-14 text-center sm:px-14">
+                  <p className="mt-4 text-sm text-gray-900">
+                    No people found using that search term.
+                  </p>
+                </div>
+              )}
+            </ul>
           </div>
         )}
+
+        {/* {isScrollBtnVisible && (
+          <button
+            className="scrollToTopBtn"
+            onClick={scrollToTop}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4.5 15.75l7.5-7.5 7.5 7.5"
+              />
+            </svg>
+          </button>
+        )} */}
       </div>
     );
   }

@@ -147,7 +147,7 @@ export default async function Home() {
   const videos = await getVideoDetails(playlistItems);
 
   return (
-    <main className="min-h-full h-screen flex flex-col gap-4 bg-gradient-to-t from-yellow-200 from-5% via-sky-500 via-70% to-indigo-900">
+    <main className="min-h-screen flex flex-col gap-4 bg-gradient-to-t from-yellow-200 from-5% via-sky-500 via-70% to-indigo-900">
       <div className="container mx-auto sm:px-6 lg:px-8 mt-8">
         <Filter videos={videos} />
       </div>
