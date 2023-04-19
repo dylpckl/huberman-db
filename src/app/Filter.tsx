@@ -118,9 +118,17 @@ export default function Filter(videos: Video[]) {
 
   function handleDisableTags() {
     setQuery("");
+    // setTags(
+    //   tags.map((tag) => {
+    //     return { ...tag, visible: false };
+    //   })
+    // );
+  }
+  function handleClearActiveTags() {
+    setQuery("");
     setTags(
       tags.map((tag) => {
-        return { ...tag, visible: false };
+        return { ...tag, active: false };
       })
     );
   }
@@ -139,6 +147,7 @@ export default function Filter(videos: Video[]) {
         searchOnChange={handleChange}
         ref={ref}
         disableTags={handleDisableTags}
+        handleClearActiveTags={handleClearActiveTags}
       />
       <VideoGrid videos={filteredVideos} />
     </AnimatePresence>
@@ -158,6 +167,7 @@ interface TagFilterProps {
   searchOnChange: Function;
   open: boolean;
   disableTags: Function;
+  handleClearActiveTags: Function;
 }
 
 const TagFilter = forwardRef(
@@ -169,6 +179,7 @@ const TagFilter = forwardRef(
       searchOnChange,
       open,
       disableTags,
+      handleClearActiveTags,
     }: TagFilterProps,
     ref
   ) => {
@@ -180,9 +191,9 @@ const TagFilter = forwardRef(
           });
 
     return (
-      <div className=" bg-amber-400 relative">
+      <div className="relative mx-auto max-w-2xl">
         {/* Search Bar */}
-        <div className="relative mt-2 rounded-md shadow-sm">
+        <div className="relative mt-2 rounded-md shadow-sm ">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 ">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -207,7 +218,7 @@ const TagFilter = forwardRef(
               name="email"
               id="email"
               className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Search for a topic..."
+              placeholder="Search by video tag"
             />
             <button
               className="absolute inset-y-0 right-0 flex items-center pr-3"
@@ -237,62 +248,92 @@ const TagFilter = forwardRef(
         </div>
 
         {/* Active Filters */}
-        <div>
-          {tags.length > 0 && (
-            <div>
+        {tags.length > 0 && tags.some((e) => e.active === true) && (
+          <div className="bg-pink-300 mt-1 rounded-md flex items-center pl-2 gap-2">
+            <button
+              className=""
+              onClick={handleClearActiveTags}
+            >
+              <svg
+                className=" h-3 w-3"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 8 8"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeWidth="1.5"
+                  d="M1 1l6 6m0-6L1 7"
+                />
+              </svg>
+            </button>
+
+            <div className="flex flex-wrap gap-2 my-2">
               {tags
                 .filter((tag: Tag) => tag.active === true)
                 .map((activeFilter: Tag) => (
-                  <span
+                  <button
                     key={activeFilter.value}
-                    className="m-1 inline-flex items-center rounded-full border border-gray-200 bg-white py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900"
+                    type="button"
+                    className="bg-teal-300 flex items-center w-fit h-6 ml-1 rounded-full px-2 py-1 text-sm"
+                    onClick={() => onChange(activeFilter.value, false)}
                   >
-                    <span>{activeFilter.value}</span>
-                    <button
-                      type="button"
-                      className="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500"
-                      onClick={() => onChange(activeFilter.value, false)}
-                    >
-                      <span className="sr-only">
-                        Remove filter for {activeFilter.value}
-                      </span>
-                      <svg
-                        className="h-2 w-2"
-                        stroke="currentColor"
-                        fill="none"
-                        viewBox="0 0 8 8"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeWidth="1.5"
-                          d="M1 1l6 6m0-6L1 7"
-                        />
-                      </svg>
-                    </button>
-                  </span>
+                    <span className="sr-only">
+                      Remove filter for {activeFilter.value}
+                    </span>
+                    {activeFilter.value}
+                  </button>
                 ))}
             </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Search Modal */}
         {open && (
-          <div
-            className="absolute z-10 bg-blue-500 flex flex-wrap gap-4 mt-1 max-h-72 w-full overflow-y-auto scroll-py-2 rounded-md py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+          <div className="overflow-hidden">
+          <ul
+            className="absolute z-10 bg-blue-500 flex flex-col max-h-60 w-full overflow-x-hidden overflow-y-auto scroll-py-2 rounded-b-lg py-1 text-base shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
             ref={ref}
           >
             {filteredTags.length > 0 && (
-              <div>
+              <>
                 {filteredTags.map((tag, index) => (
-                  <div
+                  <li
+                    onClick={(e) => onChange(tag.value, !tag.active)}
                     key={index}
-                    className=""
+                    className="relative flex items-start cursor-default select-none gap-2 py-2 px-4 w-full group hover:bg-black"
                   >
-                    <button
+                    <span
                       className={classNames(
-                        tag.active ? "border-2 border-pink-300" : "border-0",
-                        "flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-800 hover:bg-gray-200"
+                        !tag.active
+                          ? "invisible"
+                          : "text-xs group-hover:text-white"
                       )}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M4.5 12.75l6 6 9-13.5"
+                        />
+                      </svg>
+                    </span>
+                    <span className="flex truncate group-hover:text-white">
+                      {getHighlightedText(tag.value, query)}
+                    </span>
+                    {/* <button
+                      className="flex items-center rounded-md px-2.5 py-0.5 text-sm font-medium text-gray-800 hover:bg-gray-200"
+                      // className={classNames(
+                      //   tag.active ? "border-2 border-pink-300" : "border-0",
+                      //   "flex items-center rounded-md bg-gray-100 px-2.5 py-0.5 text-sm font-medium text-gray-800 hover:bg-gray-200"
+                      // )}
                       onClick={(e) => onChange(tag.value, !tag.active)}
                     >
                       {
@@ -300,10 +341,10 @@ const TagFilter = forwardRef(
                           {getHighlightedText(tag.value, query)}
                         </div>
                       }
-                    </button>
-                  </div>
+                    </button> */}
+                  </li>
                 ))}
-              </div>
+              </>
             )}
 
             {query !== "" && filteredTags.length === 0 && (
@@ -313,6 +354,7 @@ const TagFilter = forwardRef(
                 </p>
               </div>
             )}
+          </ul>
           </div>
         )}
       </div>

@@ -18,7 +18,7 @@ export default function VideoGrid(videos) {
   return (
     <AnimatePresence>
       <motion.div
-        className="grid md:grid-cols-3 xl:grid-cols-4 gap-4"
+        className="grid md:grid-cols-3 xl:grid-cols-4 gap-4 mt-4"
         initial="hidden"
         animate="show"
         exit={{ opacity: 0, y: 15 }}
