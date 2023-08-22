@@ -1,6 +1,23 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# huberman-db
+
+> A web app for filtering youtube videos based on embedded tags.
+
+Built with
+
+- [Next.js](https://nextjs.org/)
+- [Tailwind](https://tailwindcss.com/)
+- [Youtube API v3](https://developers.google.com/youtube/v3)
+- [Supabase](https://supabase.com/)
+- [Framer motion](https://www.framer.com/motion/)
+- [HeadlessUI](https://headlessui.com/)
+
+## 🔍 How it works
+
+---
 
 ## Getting Started
+
+- register youtube app
 
 First, run the development server:
 
